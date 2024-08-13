@@ -23,6 +23,15 @@ class WorldClockModalController: UIViewController {
     button.setTitleColor(.black, for: .normal)
     return button
   }()
+  
+  private let tableView: UITableView = {
+    let tableView = UITableView()
+    tableView.backgroundColor = .white
+    tableView.separatorStyle = .singleLine
+    tableView.separatorColor = .darkGray
+    tableView.register(CountriesListCell.self, forCellReuseIdentifier: "CountriesListCell")
+    return tableView
+  }()
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -32,11 +41,16 @@ class WorldClockModalController: UIViewController {
     configureUI()
   }
   private func configureUI() {
+    
+    tableView.delegate = self
+    tableView.dataSource = self
+    
     view.addSubview(searchBar)
     view.addSubview(CancleButton)
+    view.addSubview(tableView)
     
     searchBar.snp.makeConstraints {
-      $0.top.equalTo(view.safeAreaLayoutGuide).offset(10)
+      $0.top.equalTo(view.safeAreaLayoutGuide)
       $0.leading.equalTo(view.safeAreaLayoutGuide).offset(10)
     }
     
@@ -45,6 +59,28 @@ class WorldClockModalController: UIViewController {
       $0.leading.equalTo(searchBar.snp.trailing).offset(10)
       $0.trailing.equalTo(view.safeAreaLayoutGuide).offset(-20)
     }
+    
+    tableView.snp.makeConstraints {
+      $0.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(10)
+      $0.top.equalTo(searchBar.snp.bottom).offset(10)
+      $0.bottom.equalTo(view.safeAreaLayoutGuide)
+    }
+  }
+}
+
+extension WorldClockModalController: UITableViewDelegate, UITableViewDataSource {
+  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    return 1
   }
   
+  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    guard let cell = tableView.dequeueReusableCell(withIdentifier: "CountriesListCell", for: indexPath) as? CountriesListCell else {
+      return UITableViewCell()
+    }
+    cell.backgroundColor = .white
+    return cell
+  }
+  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    return 40
+  }
 }
