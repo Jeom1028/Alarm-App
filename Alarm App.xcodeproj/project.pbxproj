@@ -33,6 +33,7 @@
 		C2C2B24A2C69FC1F00D526B3 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = C2C2B2492C69FC1F00D526B3 /* RxCocoa */; };
 		C2C2B24C2C69FC1F00D526B3 /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = C2C2B24B2C69FC1F00D526B3 /* RxRelay */; };
 		C2C2B24F2C69FC3100D526B3 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = C2C2B24E2C69FC3100D526B3 /* SnapKit */; };
+		E22D06CF2C6B4BC700CC13A9 /* WorldClockTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E22D06CE2C6B4BC700CC13A9 /* WorldClockTableCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -60,6 +61,7 @@
 		C2C2B2402C69DFA900D526B3 /* WorldClockViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldClockViewModel.swift; sourceTree = "<group>"; };
 		C2C2B2422C69E07F00D526B3 /* Extension+UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension+UIColor.swift"; sourceTree = "<group>"; };
 		C2C2B2442C69E16500D526B3 /* NetworManger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworManger.swift; sourceTree = "<group>"; };
+		E22D06CE2C6B4BC700CC13A9 /* WorldClockTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldClockTableCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,6 +149,7 @@
 				C2C2B2342C69DEB300D526B3 /* StopwatchController.swift */,
 				C2C2B2362C69DEC200D526B3 /* WorldClockController.swift */,
 				43A44ABF2C6A025700ADF614 /* MainTabbarController.swift */,
+				E22D06CE2C6B4BC700CC13A9 /* WorldClockTableCell.swift */,
 				43A44AC12C6B1BB700ADF614 /* AlramModalController.swift */,
 			);
 			path = View;
@@ -259,6 +262,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E22D06CF2C6B4BC700CC13A9 /* WorldClockTableCell.swift in Sources */,
 				C2C2B2452C69E16500D526B3 /* NetworManger.swift in Sources */,
 				C2C2B23F2C69DF9D00D526B3 /* StopwatchViewModel.swift in Sources */,
 				C2C2B2432C69E07F00D526B3 /* Extension+UIColor.swift in Sources */,
