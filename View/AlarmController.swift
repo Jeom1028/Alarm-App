@@ -11,7 +11,7 @@ class AlarmController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .olveDrab
         // Do any additional setup after loading the view.
     }
 

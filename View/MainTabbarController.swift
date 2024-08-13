@@ -14,11 +14,11 @@ class MainTabbarController: UITabBarController {
         setupTabbar()
     }
     
-    // Tabbar 생성하는 메서드 - YJ
+    // Tabbar 생성 - YJ
     func setupTabbar() {
         
-        let firstTab = WorldClockController()
-        let secondTab = AlarmController()
+        let firstTab = UINavigationController(rootViewController: WorldClockController())
+        let secondTab = UINavigationController(rootViewController: AlarmController())
         let thirdTab = StopwatchController()
         let fourthTab = TimerController()
         
