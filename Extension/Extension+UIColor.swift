@@ -40,6 +40,6 @@ extension UIColor {
 
     static var olveDrab: UIColor { return color(named: "OlveDrab")! }
     static var forestGreen: UIColor { return color(named: "ForestGreen")! }
-    static var brown: UIColor { return color(named: "Brown")! }
+    static var brown1: UIColor { return color(named: "Brown")! }
     static var khaki: UIColor { return color(named: "Khaki")! }
 }
