@@ -34,6 +34,6 @@ class MainTabbarController: UITabBarController {
         tabBar.unselectedItemTintColor = .lightGray // 선택안된 색상
         tabBar.isTranslucent = false
         
-        selectedIndex = 1
+        selectedIndex = 1 // 기본으로 선택된 탭 설정
     }
 }

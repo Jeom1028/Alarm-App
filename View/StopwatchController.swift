@@ -53,8 +53,7 @@ class StopwatchController: UIViewController {
     
     configureUI()
     setupButtons()
-  }
-  
+  } 
   
   func configureUI() {
     [timeLabel, buttonStackView].forEach {
