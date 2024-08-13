@@ -18,6 +18,7 @@ class TimerController: UIViewController {
        let button = UIButton()
         button.setTitle("시작", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 18)
+        button.layer.cornerRadius = 8
         button.backgroundColor = UIColor.brown
        return button
     }()
@@ -26,6 +27,7 @@ class TimerController: UIViewController {
        let button = UIButton()
         button.setTitle("취소", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 18)
+        button.layer.cornerRadius = 8
         button.backgroundColor = UIColor.brown
         return button
     }()
