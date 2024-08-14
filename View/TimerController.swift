@@ -120,6 +120,8 @@ class TimerController: UIViewController {
     }
     
     @objc private func timeLabelTapped() {
+        guard viewmodel.timerState.value == .stopped else { return }
+        
         timeLabel.isHidden = true
         pickersStackView.isHidden = false
     }
