@@ -12,19 +12,21 @@ import UIKit
 class CoreDataManager {
     static let shared = CoreDataManager()
     
-    private var container: NSPersistentContainer!
-    private var context: NSManagedObjectContext!
+    // AppDelegate 내부에 있는 viewContext를 호출하는 코드
+    private var context: NSManagedObjectContext? = {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            print("AppDelegate가 초기화되지 않았습니다.")
+            return nil
+        }
+        return appDelegate.persistentContainer.viewContext
+    }()
     
-    private init() {
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        self.container = appDelegate.persistentContainer
-        self.context = self.container.viewContext
-    }
+    private init() {}
     
     // Create
     // 생성 예시: CoreDataManager.shared.create(entityName: "Alram", values: ["time": ~~, "sound": "~~"], ofType: Alram.self)
     func create<T: NSManagedObject>(entityName: String, values: [String: Any], ofType type: T.Type) {
-        guard let entity = NSEntityDescription.entity(forEntityName: entityName, in: context) else {
+        guard let context = context, let entity = NSEntityDescription.entity(forEntityName: entityName, in: context) else {
             print("엔티티 찾을 수 없음")
             return
         }
@@ -43,7 +45,7 @@ class CoreDataManager {
     func read<T: NSManagedObject>(entityName: String, predicate: NSPredicate? = nil, ofType type: T.Type) -> [T] {
         let fetchRequest: NSFetchRequest<T> = NSFetchRequest(entityName: entityName)
         fetchRequest.predicate = predicate
-        
+        guard let context = context else { return [] }
         do {
             return try context.fetch(fetchRequest)
         } catch {
@@ -57,7 +59,7 @@ class CoreDataManager {
     func update<T: NSManagedObject>(entityName: String, predicate: NSPredicate, withValues values: [String: Any], ofType type: T.Type) {
         let fetchRequest: NSFetchRequest<T> = NSFetchRequest(entityName: entityName)
         fetchRequest.predicate = predicate
-        
+        guard let context = context else { return }
         do {
             let results = try context.fetch(fetchRequest)
             for object in results {
@@ -76,7 +78,7 @@ class CoreDataManager {
     func delete<T: NSManagedObject>(entityName: String, predicate: NSPredicate, ofType type: T.Type) {
         let fetchRequest: NSFetchRequest<T> = NSFetchRequest(entityName: entityName)
         fetchRequest.predicate = predicate
-        
+        guard let context = context else { return }
         do {
             let results = try context.fetch(fetchRequest)
             for object in results {
@@ -90,6 +92,7 @@ class CoreDataManager {
     
     // 데이터 저장 함수
     private func saveContext() {
+        guard let context = context else { return }
         if context.hasChanges {
             do {
                 try context.save()

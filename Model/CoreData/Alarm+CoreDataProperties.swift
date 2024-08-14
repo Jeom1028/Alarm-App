@@ -2,7 +2,7 @@
 //  Alarm+CoreDataProperties.swift
 //  Alarm App
 //
-//  Created by 강유정 on 8/13/24.
+//  Created by 강유정 on 8/14/24.
 //
 //
 
@@ -17,8 +17,10 @@ extension Alarm {
     }
 
     @NSManaged public var id: UUID?
-    @NSManaged public var time: Date?
+    @NSManaged public var minute: Int16
     @NSManaged public var sound: String?
+    @NSManaged public var hour: Int16
+    @NSManaged public var ampm: String?
 
 }
 
