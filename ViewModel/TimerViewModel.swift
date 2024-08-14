@@ -22,14 +22,17 @@ class TimerViewModel {
     
     let timerState = BehaviorRelay<TimerState>(value: .stopped)
     let timeText = BehaviorRelay<String>(value: "00:00:00")
+    let progress = BehaviorRelay<Float>(value: 1.0)
     
-    //시간 설정
+    private var totalDuration: TimeInterval = 0
+    
     func setTime(hours: Int, minutes: Int, seconds: Int) {
         timerModel.setTime(hours: hours, minutes: minutes, seconds: seconds)
-        updateTimeText() // 시간 값을 즉시 라벨에 반영
+        totalDuration = TimeInterval((hours * 3600) + (minutes * 60) + seconds)
+        updateTimeText()
+        updateProgress() // 초기화 시 progress를 설정합니다.
     }
     
-    // 타이머 시작
     func startTimer() {
         guard timerState.value != .running else { return }
         
@@ -39,34 +42,42 @@ class TimerViewModel {
         }
     }
     
-    // 타이머 일시정지
     func pauseTimer() {
         guard timerState.value == .running else { return }
         timerState.accept(.paused)
         timer?.invalidate()
     }
     
-    //타이머 취소 or 리셋
     func resetTimer() {
         timer?.invalidate()
         timerState.accept(.stopped)
         timerModel.reset()
         updateTimeText()
+        updateProgress()
     }
     
     private func tick() {
         timerModel.tick()
-        print("Tick in ViewModel")  // Debugging
+        print("Tick in ViewModel")
         if timerModel.remainingTime <= 0 {
             resetTimer()
         } else {
             updateTimeText()
+            updateProgress() // 시간이 지날 때마다 progress를 업데이트합니다.
         }
     }
-
     
     private func updateTimeText() {
         timeText.accept(timerModel.formattedTime())
+    }
+    
+    private func updateProgress() {
+        if totalDuration > 0 {
+            let progressValue = Float(timerModel.remainingTime) / Float(totalDuration)
+            progress.accept(progressValue)
+        } else {
+            progress.accept(1.0)
+        }
     }
 }
 

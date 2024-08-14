@@ -39,15 +39,25 @@ class TimerController: UIViewController {
     
     private let timeLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: "Courier-Bold", size: 40)
+        label.font = UIFont(name: "Courier-Bold", size: 60)
         label.textAlignment = .center
         label.text = "00:00:00"
-        label.textColor = UIColor.khaki
-        label.backgroundColor = .black
+        label.textColor = UIColor.black
+        label.backgroundColor = .white
         label.layer.cornerRadius = 8
         label.clipsToBounds = true
         label.isUserInteractionEnabled = true
         return label
+    }()
+    
+    // UIProgressView 추가
+    private let progressBar: UIProgressView = {
+        let progressView = UIProgressView(progressViewStyle: .default)
+        progressView.progressTintColor = UIColor.black
+        progressView.trackTintColor = UIColor.lightGray
+        progressView.layer.cornerRadius = 4
+        progressView.clipsToBounds = true
+        return progressView
     }()
     
     private var pickersStackView: UIStackView!
@@ -57,8 +67,8 @@ class TimerController: UIViewController {
         setupUI()
         setupPickers()
         bindViewModel()
-        view.backgroundColor = UIColor.olveDrab
-        // Do any additional setup after loading the view.
+        view.backgroundColor = UIColor.white
+        
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(timeLabelTapped))
         timeLabel.addGestureRecognizer(tapGesture)
         
@@ -66,26 +76,33 @@ class TimerController: UIViewController {
     }
     
     private func setupUI() {
-        
         pickersStackView = UIStackView(arrangedSubviews: [hoursPicker, minutesPicker, secondsPicker])
         pickersStackView.axis = .horizontal
         pickersStackView.distribution = .fillEqually
         pickersStackView.spacing = 10
         
-        [pickersStackView, timeLabel, startButton, cancleButton].forEach { view.addSubview($0) }
+        [pickersStackView, timeLabel, progressBar, startButton, cancleButton].forEach { view.addSubview($0) }
+        
+        
+        // progressBar 레이아웃 설정
+        progressBar.snp.makeConstraints {
+            $0.bottom.equalTo(pickersStackView.snp.top).offset(-10)
+            $0.left.right.equalToSuperview().inset(20)
+            $0.height.equalTo(10)
+        }
         
         timeLabel.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(80)
+            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(200)
             $0.left.right.equalToSuperview().inset(20)
             $0.height.equalTo(80)
         }
         
         pickersStackView.snp.makeConstraints  {
-            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(80)
+            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(200)
             $0.left.right.equalToSuperview().inset(20)
             $0.height.equalTo(150)
         }
-        
+
         
         startButton.snp.makeConstraints {
             $0.top.equalTo(pickersStackView.snp.bottom).offset(20)
@@ -116,22 +133,19 @@ class TimerController: UIViewController {
         secondsPicker.dataSource = self
     }
     
-    
     private func bindViewModel() {
         let pickerData = Observable.just(Array(0...59))
         
-        // Picker 값이 선택되었을 때 viewModel에 전달
         Observable.combineLatest(
             hoursPicker.rx.itemSelected.map { $0.row },
             minutesPicker.rx.itemSelected.map { $0.row },
             secondsPicker.rx.itemSelected.map { $0.row }
         )
         .subscribe(onNext: { [weak self] hours, minutes, seconds in
-            print("Selected time from picker: \(hours)h \(minutes)m \(seconds)s") // 디버깅
+            print("Selected time from picker: \(hours)h \(minutes)m \(seconds)s")
             self?.viewmodel.setTime(hours: hours, minutes: minutes, seconds: seconds)
         }).disposed(by: disposBag)
         
-        // 타이머 상태에 따른 UI 업데이트
         viewmodel.timerState
             .subscribe(onNext: { [weak self] state in
                 switch state {
@@ -152,7 +166,6 @@ class TimerController: UIViewController {
                 }
             }).disposed(by: disposBag)
         
-        // 시작 버튼 클릭 이벤트 처리
         startButton.rx.tap
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
@@ -164,18 +177,23 @@ class TimerController: UIViewController {
                 }
             }).disposed(by: disposBag)
         
-        // 취소 버튼 클릭 이벤트 처리
         cancleButton.rx.tap
             .subscribe(onNext: { [weak self] in
                 self?.viewmodel.resetTimer()
             }).disposed(by: disposBag)
         
-        // 타이머가 업데이트될 때 timeLabel을 업데이트합니다.
         viewmodel.timeText
             .bind(to: timeLabel.rx.text)
             .disposed(by: disposBag)
+        
+        // progressBar 업데이트
+        viewmodel.progress
+            .observe(on: MainScheduler.instance)
+            .bind(to: progressBar.rx.progress)
+            .disposed(by: disposBag)
     }
 }
+
 
 extension TimerController: UIPickerViewDataSource, UIPickerViewDelegate {
 
