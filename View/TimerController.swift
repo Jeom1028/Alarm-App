@@ -23,8 +23,8 @@ class TimerController: UIViewController {
         let button = UIButton()
         button.setTitle("시작", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 18)
-        button.layer.cornerRadius = 8
-        button.backgroundColor = UIColor.brown1
+        button.layer.cornerRadius = 45
+        button.backgroundColor = .olveDrab.withAlphaComponent(0.7)
         return button
     }()
     
@@ -32,8 +32,8 @@ class TimerController: UIViewController {
         let button = UIButton()
         button.setTitle("취소", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 18)
-        button.layer.cornerRadius = 8
-        button.backgroundColor = UIColor.brown1
+        button.layer.cornerRadius = 45
+        button.backgroundColor = .black.withAlphaComponent(0.7)
         return button
     }()
     
@@ -105,17 +105,15 @@ class TimerController: UIViewController {
 
         
         startButton.snp.makeConstraints {
-            $0.top.equalTo(pickersStackView.snp.bottom).offset(20)
-            $0.right.equalToSuperview().inset(100)
-            $0.width.equalTo(80)
-            $0.height.equalTo(50)
+            $0.top.equalTo(timeLabel.snp.bottom).offset(60)
+            $0.right.equalToSuperview().inset(75)
+            $0.width.height.equalTo(90)
         }
         
         cancleButton.snp.makeConstraints {
-            $0.top.equalTo(pickersStackView.snp.bottom).offset(20)
-            $0.left.equalToSuperview().inset(100)
-            $0.width.equalTo(80)
-            $0.height.equalTo(50)
+            $0.top.equalTo(timeLabel.snp.bottom).offset(60)
+            $0.left.equalToSuperview().inset(75)
+            $0.width.height.equalTo(90)
         }
     }
     
