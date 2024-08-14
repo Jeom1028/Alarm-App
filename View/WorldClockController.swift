@@ -9,12 +9,21 @@ import UIKit
 import SnapKit
 
 class WorldClockController: UIViewController {
-  private let tableView = UITableView()
+  private let tableView: UITableView = {
+    let tableView = UITableView()
+    tableView.backgroundColor = .white
+    tableView.separatorStyle = .singleLine
+    tableView.separatorColor = .darkGray
+    tableView.register(WorldClockTableCell.self, forCellReuseIdentifier: "WorldClockTableCell")
+    return tableView
+  }()
   
   override func viewDidLoad() {
     super.viewDidLoad()
     view.backgroundColor = .white
     configureUi()
+    AddCountries()
+    Edit()
   }
   
   func configureUi() {
@@ -22,16 +31,27 @@ class WorldClockController: UIViewController {
     
     tableView.delegate = self
     tableView.dataSource = self
-    tableView.register(WorldClockTableCell.self, forCellReuseIdentifier: "WorldClockTableCell")
-    tableView.backgroundColor = .white
-    tableView.separatorStyle = .singleLine
-    tableView.separatorColor = .darkGray
     
     tableView.snp.makeConstraints {
       $0.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(10)
-      $0.top.equalTo(view.safeAreaLayoutGuide).offset(10)
+      $0.top.equalTo(view.safeAreaLayoutGuide)
       $0.bottom.equalTo(view.safeAreaLayoutGuide)
     }
+  }
+  private func AddCountries() {
+    let plusButton = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(CountriesList))
+    self.navigationItem.rightBarButtonItem = plusButton
+  }
+  
+  private func Edit() {
+    let editButton = UIBarButtonItem(title: "편집", style: .plain, target: self, action: .none)
+    self.navigationItem.leftBarButtonItem = editButton
+  }
+
+  @objc func CountriesList() {
+    let plusButton = UINavigationController(rootViewController: WorldClockModalController())
+    plusButton.modalPresentationStyle = .formSheet
+    present(plusButton, animated: true, completion: nil)
   }
 }
 
