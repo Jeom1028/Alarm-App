@@ -8,7 +8,8 @@
 import RxSwift
 import RxCocoa
 import Foundation
-import UserNotifications  // 추가
+import UserNotifications
+import UIKit
 
 enum TimerState {
     case stopped
@@ -16,7 +17,7 @@ enum TimerState {
     case paused
 }
 
-class TimerViewModel {
+class TimerViewModel: NSObject, UNUserNotificationCenterDelegate {
     private let disposeBag = DisposeBag()
     private var timer: Timer?
     private let timerModel = TimerModel()
@@ -27,8 +28,12 @@ class TimerViewModel {
     
     private var totalDuration: TimeInterval = 0
 
-    init() {
-        requestNotificationPermission()  // 초기화 시 알림 권한 요청
+    private var backgroundTaskID: UIBackgroundTaskIdentifier = .invalid
+    
+    override init() {
+        super.init()
+        UNUserNotificationCenter.current().delegate = self  // Add this line
+        requestNotificationPermission()
     }
     
     func setTime(hours: Int, minutes: Int, seconds: Int) {
@@ -46,14 +51,16 @@ class TimerViewModel {
             self?.tick()
         }
         
-        // 타이머가 종료될 때 로컬 알림을 스케줄링
+        startBackgroundTask()
+        print("Starting timer and scheduling notification")
         scheduleNotification(in: totalDuration)
     }
-    
+
     func pauseTimer() {
         guard timerState.value == .running else { return }
         timerState.accept(.paused)
         timer?.invalidate()
+        endBackgroundTask()
     }
     
     func resetTimer() {
@@ -62,11 +69,10 @@ class TimerViewModel {
         timerModel.reset()
         updateTimeText()
         updateProgress()
-        
-        // 타이머 리셋 시 알림 제거
+        endBackgroundTask()
         removePendingNotifications()
     }
-    
+
     private func tick() {
         timerModel.tick()
         print("Tick in ViewModel")
@@ -91,7 +97,6 @@ class TimerViewModel {
         }
     }
     
-    // 알림 권한 요청
     private func requestNotificationPermission() {
         let center = UNUserNotificationCenter.current()
         center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
@@ -103,25 +108,46 @@ class TimerViewModel {
         }
     }
     
-    // 알림 스케줄링
     private func scheduleNotification(in timeInterval: TimeInterval) {
         let content = UNMutableNotificationContent()
         content.title = "기상!!"
         content.body = "3중대 기상!!"
         content.sound = UNNotificationSound.default
-        
+
+        print("Scheduling notification with content: \(content.title), \(content.body)")
+
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: timeInterval, repeats: false)
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-        
+
         UNUserNotificationCenter.current().add(request) { error in
             if let error = error {
                 print("Error scheduling notification: \(error.localizedDescription)")
+            } else {
+                print("Notification scheduled successfully")
             }
         }
     }
     
-    // 펜딩된 알림 제거
     private func removePendingNotifications() {
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+    }
+    
+    private func startBackgroundTask() {
+        backgroundTaskID = UIApplication.shared.beginBackgroundTask {
+            self.endBackgroundTask()
+        }
+    }
+    
+    private func endBackgroundTask() {
+        if backgroundTaskID != .invalid {
+            UIApplication.shared.endBackgroundTask(backgroundTaskID)
+            backgroundTaskID = .invalid
+        }
+    }
+    
+    // UNUserNotificationCenterDelegate method to handle notifications while the app is in the foreground
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        // Show alert and sound when app is in foreground
+        completionHandler([.banner, .sound])
     }
 }
