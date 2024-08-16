@@ -10,6 +10,8 @@ import UIKit
 import SnapKit
 
 class WorldClockModalController: UIViewController {
+  var viewModel = CountriesListViewModel()
+  
   let searchBar: UISearchBar = {
     let searchBar = UISearchBar()
     searchBar.placeholder = "검색"
@@ -29,10 +31,10 @@ class WorldClockModalController: UIViewController {
     tableView.backgroundColor = .white
     tableView.separatorStyle = .singleLine
     tableView.separatorColor = .darkGray
-    tableView.register(CountriesListCell.self, forCellReuseIdentifier: "CountriesListCell")
+    tableView.register(CountriesListTableViewCell.self, forCellReuseIdentifier: "CountriesListCell")
     return tableView
   }()
-
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     view.backgroundColor = .white
@@ -70,13 +72,15 @@ class WorldClockModalController: UIViewController {
 
 extension WorldClockModalController: UITableViewDelegate, UITableViewDataSource {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return 1
+    return viewModel.countriesList.count
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    guard let cell = tableView.dequeueReusableCell(withIdentifier: "CountriesListCell", for: indexPath) as? CountriesListCell else {
+    guard let cell = tableView.dequeueReusableCell(withIdentifier: "CountriesListCell", for: indexPath) as? CountriesListTableViewCell else {
       return UITableViewCell()
     }
+    let info = viewModel.countriesList[indexPath.row]
+    cell.inputData(with: info)
     cell.backgroundColor = .white
     return cell
   }
