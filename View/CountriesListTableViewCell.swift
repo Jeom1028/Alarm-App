@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import SnapKit
 
-class CountriesListCell: UITableViewCell {
+class CountriesListTableViewCell: UITableViewCell {
   
   private let countryLabel: UILabel = {
     let label = UILabel()
@@ -35,11 +35,22 @@ class CountriesListCell: UITableViewCell {
   
   private func configureUI() {
     contentView.addSubview(countryLabel)
+    contentView.addSubview(cityLabel)
     
     countryLabel.snp.makeConstraints {
       $0.leading.equalTo(contentView.snp.leading).offset(20)
       $0.centerY.equalTo(contentView)
     }
+    
+    cityLabel.snp.makeConstraints {
+      $0.leading.equalTo(countryLabel.snp.trailing).offset(10)
+      $0.centerY.equalTo(contentView)
+    }
+  }
+  
+  func inputData(with info: CountriesListModel) {
+    countryLabel.text = info.countryName
+    cityLabel.text = info.cityName
   }
 }
 
