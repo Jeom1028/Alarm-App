@@ -50,7 +50,6 @@ class TimerController: UIViewController {
         return label
     }()
     
-    // UIProgressView 추가
     private let progressBar: UIProgressView = {
         let progressView = UIProgressView(progressViewStyle: .default)
         progressView.progressTintColor = UIColor.black
@@ -59,6 +58,16 @@ class TimerController: UIViewController {
         progressView.clipsToBounds = true
         return progressView
     }()
+    
+    private let soundTableView: UITableView = {
+        let tableView = UITableView(frame: .zero, style: .grouped)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "soundCell")
+        tableView.isScrollEnabled = false
+        tableView.layer.cornerRadius = 8
+        tableView.clipsToBounds = true
+        return tableView
+    }()
+    
     
     private var pickersStackView: UIStackView!
     
@@ -73,6 +82,9 @@ class TimerController: UIViewController {
         timeLabel.addGestureRecognizer(tapGesture)
         
         pickersStackView.isHidden = true
+        
+        soundTableView.delegate = self
+        soundTableView.dataSource = self
     }
     
     private func setupUI() {
@@ -81,7 +93,7 @@ class TimerController: UIViewController {
         pickersStackView.distribution = .fillEqually
         pickersStackView.spacing = 10
         
-        [pickersStackView, timeLabel, progressBar, startButton, cancleButton].forEach { view.addSubview($0) }
+        [pickersStackView, timeLabel, progressBar, startButton, cancleButton, soundTableView].forEach { view.addSubview($0) }
         
         
         // progressBar 레이아웃 설정
@@ -115,6 +127,12 @@ class TimerController: UIViewController {
             $0.left.equalToSuperview().inset(75)
             $0.width.height.equalTo(90)
         }
+        
+        soundTableView.snp.makeConstraints {
+            $0.top.equalTo(startButton.snp.bottom).offset(30)
+            $0.left.right.equalToSuperview().inset(20)
+            $0.height.equalTo(200)  // 셀 3개 높이 설정 (각 셀 50, 헤더 50)
+              }
     }
     
     @objc private func timeLabelTapped() {
@@ -218,4 +236,44 @@ extension TimerController: UIPickerViewDataSource, UIPickerViewDelegate {
     }
 }
 
+extension TimerController: UITableViewDelegate, UITableViewDataSource {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
 
+    // Custom view for header
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView()
+        headerView.backgroundColor = UIColor.olveDrab
+
+        let label = UILabel()
+        label.text = "사운드"
+        label.font = UIFont.systemFont(ofSize: 18, weight: .bold)
+        label.textColor = .white
+        label.frame = CGRect(x: 16, y: 0, width: tableView.frame.width, height: 60)
+
+        headerView.addSubview(label)
+        return headerView
+    }
+
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 65
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 3
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "soundCell", for: indexPath)
+        cell.textLabel?.text = "소리 \(indexPath.row + 1)"
+        cell.backgroundColor = UIColor.khaki
+        return cell
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("Selected Sound \(indexPath.row + 1)")
+        // 여기에 사용자가 소리를 선택했을 때의 로직 추가
+    }
+}
