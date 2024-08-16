@@ -8,12 +8,5 @@
 import Foundation
 
 struct CountriesListModel {
-<<<<<<< Updated upstream
-  let countryName: String
-  let cityName: String
-}
-
-=======
     let timeZone: String
 }
->>>>>>> Stashed changes

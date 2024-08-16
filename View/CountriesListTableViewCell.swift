@@ -13,23 +13,9 @@ class CountriesListTableViewCell: UITableViewCell {
   
   private let countryLabel: UILabel = {
     let label = UILabel()
-<<<<<<< Updated upstream:View/CountriesListTableViewCell.swift
-    label.text = "Country"
-=======
-<<<<<<< Updated upstream:View/CountriesListCell.swift
-    label.text = "City, Country"
-=======
     //    label.text = "Country"
->>>>>>> Stashed changes:View/CountriesListTableViewCell.swift
->>>>>>> Stashed changes:View/CountriesListCell.swift
     label.font = UIFont.systemFont(ofSize: 15)
     label.textColor = .black
-    return label
-  }()
-  
-  private let cityLabel: UILabel = {
-    let label = UILabel()
-    label.text = "City"
     return label
   }()
   
@@ -43,31 +29,14 @@ class CountriesListTableViewCell: UITableViewCell {
   
   private func configureUI() {
     contentView.addSubview(countryLabel)
-    contentView.addSubview(cityLabel)
     
     countryLabel.snp.makeConstraints {
       $0.leading.equalTo(contentView.snp.leading).offset(20)
       $0.centerY.equalTo(contentView)
     }
-<<<<<<< Updated upstream:View/CountriesListTableViewCell.swift
-    
-    cityLabel.snp.makeConstraints {
-      $0.leading.equalTo(countryLabel.snp.trailing).offset(10)
-      $0.centerY.equalTo(contentView)
-    }
-  }
-  
-  func inputData(with info: CountriesListModel) {
-    countryLabel.text = info.countryName
-    cityLabel.text = info.cityName
-=======
-<<<<<<< Updated upstream:View/CountriesListCell.swift
-=======
   }
   func inputData(with info: CountriesListModel) {
     countryLabel.text = info.timeZone
->>>>>>> Stashed changes:View/CountriesListTableViewCell.swift
->>>>>>> Stashed changes:View/CountriesListCell.swift
   }
 }
 
