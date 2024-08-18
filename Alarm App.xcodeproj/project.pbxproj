@@ -31,6 +31,7 @@
 		C2C2B24A2C69FC1F00D526B3 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = C2C2B2492C69FC1F00D526B3 /* RxCocoa */; };
 		C2C2B24C2C69FC1F00D526B3 /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = C2C2B24B2C69FC1F00D526B3 /* RxRelay */; };
 		C2C2B24F2C69FC3100D526B3 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = C2C2B24E2C69FC3100D526B3 /* SnapKit */; };
+		C45EE8912C6C906500909F46 /* StopwatchTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C45EE8902C6C906400909F46 /* StopwatchTableCell.swift */; };
 		E22D06CF2C6B4BC700CC13A9 /* WorldClockTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E22D06CE2C6B4BC700CC13A9 /* WorldClockTableCell.swift */; };
 		E22D06D22C6B8F9100CC13A9 /* AlarmApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E22D06D02C6B8F9100CC13A9 /* AlarmApp.xcdatamodeld */; };
 		E22D06D42C6BBCF100CC13A9 /* WorldClockModalController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E22D06D32C6BBCF100CC13A9 /* WorldClockModalController.swift */; };
@@ -60,6 +61,7 @@
 		C2C2B23E2C69DF9D00D526B3 /* StopwatchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopwatchViewModel.swift; sourceTree = "<group>"; };
 		C2C2B2402C69DFA900D526B3 /* WorldClockViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldClockViewModel.swift; sourceTree = "<group>"; };
 		C2C2B2422C69E07F00D526B3 /* Extension+UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension+UIColor.swift"; sourceTree = "<group>"; };
+		C45EE8902C6C906400909F46 /* StopwatchTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopwatchTableCell.swift; sourceTree = "<group>"; };
 		E22D06CE2C6B4BC700CC13A9 /* WorldClockTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldClockTableCell.swift; sourceTree = "<group>"; };
 		E22D06D12C6B8F9100CC13A9 /* AlarmApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = AlarmApp.xcdatamodel; sourceTree = "<group>"; };
 		E22D06D32C6BBCF100CC13A9 /* WorldClockModalController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldClockModalController.swift; sourceTree = "<group>"; };
@@ -150,6 +152,7 @@
 				43A44AC12C6B1BB700ADF614 /* AlramModalController.swift */,
 				C2C2B2322C69D8B100D526B3 /* TimerController.swift */,
 				C2C2B2342C69DEB300D526B3 /* StopwatchController.swift */,
+				C45EE8902C6C906400909F46 /* StopwatchTableCell.swift */,
 				C2C2B2362C69DEC200D526B3 /* WorldClockController.swift */,
 				E22D06CE2C6B4BC700CC13A9 /* WorldClockTableCell.swift */,
 				E22D06D32C6BBCF100CC13A9 /* WorldClockModalController.swift */,
@@ -273,6 +276,7 @@
 				C2C2B2372C69DEC200D526B3 /* WorldClockController.swift in Sources */,
 				C25A77402C6B22B5001E2B83 /* TimerModel.swift in Sources */,
 				43A44AC02C6A025700ADF614 /* MainTabbarController.swift in Sources */,
+				C45EE8912C6C906500909F46 /* StopwatchTableCell.swift in Sources */,
 				C2C2B21C2C69D82300D526B3 /* SceneDelegate.swift in Sources */,
 				43A44AC82C6B336100ADF614 /* Alarm+CoreDataClass.swift in Sources */,
 				43A44AC92C6B336100ADF614 /* Alarm+CoreDataProperties.swift in Sources */,
