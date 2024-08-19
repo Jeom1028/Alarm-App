@@ -26,16 +26,16 @@ class AlarmModalController: UIViewController {
         let tableView = UITableView()
         tableView.backgroundColor = .olveDrab.withAlphaComponent(0.3)
         tableView.layer.cornerRadius = 15
-        tableView.rowHeight = 45 // 또는 적절한 높이로 설정
+        tableView.rowHeight = 45
         return tableView
     }()
     
     private let hours = Array(1...12)
     private let minutes = Array(0...59)
     private let ampm = ["오전", "오후"]
-    private let sound = ["기상나팔", "불침번", "미정", "안함"] // 사운드 목록
+    private let sound = ["기상나팔", "불침번", "행정반", "안함"]
     
-    private var selectedSound: String = "" // 선택된 사운드 이름을 저장할 변수
+    private var selectedSound: String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,7 +49,7 @@ class AlarmModalController: UIViewController {
         datePicker.dataSource = self
         
         tableView.dataSource = self
-          tableView.delegate = self
+        tableView.delegate = self
         // tableView 셀 등록
         tableView.register(AlarmSoundCell.self, forCellReuseIdentifier: AlarmSoundCell.id)
         
@@ -114,13 +114,12 @@ class AlarmModalController: UIViewController {
         
         // Core Data에 저장
         viewModel.addAlarm(hour: hour, minute: minute, ampm: ampm, sound: selectedSound)
-
+        
+        // 알림 예약
+        viewModel.scheduleAlarmNotification(hour: hour, minute: minute, ampm: ampm, sound: selectedSound)
+        print("\(hour), \(minute), \(ampm), \(selectedSound)")
+        
         dismiss(animated: true, completion: nil) // 모달 닫기
-    }
-    
-    // 선택된 사운드 이름을 받는 메서드
-    func didSelectSound(_ sound: String) {
-        selectedSound = sound
     }
 }
 
@@ -159,7 +158,7 @@ extension AlarmModalController: UIPickerViewDelegate, UIPickerViewDataSource {
         }
     }
 }
-    
+
 //MARK: - TableView 설정 - YJ
 extension AlarmModalController: UITableViewDataSource, UITableViewDelegate {
     
@@ -175,7 +174,8 @@ extension AlarmModalController: UITableViewDataSource, UITableViewDelegate {
         let soundName = sound[indexPath.row]
         cell.configure(with: soundName)
         
-        return cell    }
+        return cell
+    }
     
     // 셀을 선택했을 때 호출되는 메서드
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
