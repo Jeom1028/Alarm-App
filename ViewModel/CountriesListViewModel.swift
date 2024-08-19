@@ -23,7 +23,7 @@ class CountriesListViewModel {
         if components.count == 2 {
           let city = String(components[1])
           
-          let countriesInfo = CountriesListModel(timeZone: city)
+          let countriesInfo = CountriesListModel(timeZone: timeZone)
           countriesList.append(countriesInfo)
         }
       }
