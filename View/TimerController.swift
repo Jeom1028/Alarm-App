@@ -251,8 +251,9 @@ class TimerController: UIViewController {
                 
                 // 이미지 위치 업데이트
                 UIView.animate(withDuration: 1) {
-                    self.timerImageView.center.x = newCenterX
+                    self.timerImageView.transform = CGAffineTransform(translationX: newCenterX - self.timerImageView.center.x, y: 0)
                 }
+
             }).disposed(by: disposBag)
     }
 

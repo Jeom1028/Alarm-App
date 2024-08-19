@@ -136,7 +136,7 @@ class TimerViewModel: NSObject, UNUserNotificationCenterDelegate {
 
         print("Scheduling notification with content: \(content.title), \(content.body)")
 
-        // 알림을 한 번만 울리도록 설정
+        // 알림을 반복적으로 울리도록 설정
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: timeInterval, repeats: false)
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
 
