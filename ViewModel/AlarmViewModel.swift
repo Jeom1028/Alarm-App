@@ -12,10 +12,7 @@ import RxCocoa
 class AlarmViewModel {
     
     private let alarmsSubject = PublishSubject<[Alarm]>()
-//    var alarms: Observable<[Alarm]> {
-//        return alarmsSubject.asObservable()
-//    }
-    
+//    private let selectedSoundSubject = BehaviorSubject<String?>(value: nil)
     private let disposeBag = DisposeBag()
     
     init() {
@@ -36,14 +33,15 @@ class AlarmViewModel {
     }
     
     //MARK: - 새로운 알람 데이터를 Core Data에 저장하는 메서드 - YJ
-    func addAlarm(hour: Int, minute: Int, ampm: String) {
+    func addAlarm(hour: Int, minute: Int, ampm: String, sound: String) {
         let coreDataManager = CoreDataManager.shared
         coreDataManager.create(
             entityName: "Alarm",
             values: [
                 "hour": hour,
                 "minute": minute,
-                "ampm": ampm
+                "ampm": ampm,
+                "sound": sound
             ],
             ofType: Alarm.self
         )
