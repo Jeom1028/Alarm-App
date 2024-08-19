@@ -34,14 +34,13 @@
 		C2C2B24C2C69FC1F00D526B3 /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = C2C2B24B2C69FC1F00D526B3 /* RxRelay */; };
 		C2C2B24F2C69FC3100D526B3 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = C2C2B24E2C69FC3100D526B3 /* SnapKit */; };
 		C402F9302C72E024009D987E /* StopwatchTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C402F92F2C72E024009D987E /* StopwatchTableCell.swift */; };
-		C402F9332C72E139009D987E /* AlarmApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C402F9312C72E139009D987E /* AlarmApp.xcdatamodeld */; };
 		E22D06CF2C6B4BC700CC13A9 /* WorldClockTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E22D06CE2C6B4BC700CC13A9 /* WorldClockTableCell.swift */; };
 		E22D06D42C6BBCF100CC13A9 /* WorldClockModalController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E22D06D32C6BBCF100CC13A9 /* WorldClockModalController.swift */; };
 		E22D06D62C6C1B0A00CC13A9 /* CountriesListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E22D06D52C6C1B0A00CC13A9 /* CountriesListTableViewCell.swift */; };
 		E2333A202C6F109300F43CA1 /* (null) in Sources */ = {isa = PBXBuildFile; };
-		E2333A252C72D4FE00F43CA1 /* AlarmApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E2333A232C72D4FE00F43CA1 /* AlarmApp.xcdatamodeld */; };
 		E2AE2CAE2C6CB23F0043CC63 /* CountriesListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2AE2CAD2C6CB23F0043CC63 /* CountriesListModel.swift */; };
 		E2AE2CB02C6CB2580043CC63 /* CountriesListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2AE2CAF2C6CB2580043CC63 /* CountriesListViewModel.swift */; };
+		E2C4AA212C72E3500056B01D /* AlarmApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E2C4AA1F2C72E3500056B01D /* AlarmApp.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -70,13 +69,12 @@
 		C2C2B2402C69DFA900D526B3 /* WorldClockViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldClockViewModel.swift; sourceTree = "<group>"; };
 		C2C2B2422C69E07F00D526B3 /* Extension+UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension+UIColor.swift"; sourceTree = "<group>"; };
 		C402F92F2C72E024009D987E /* StopwatchTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopwatchTableCell.swift; sourceTree = "<group>"; };
-		C402F9322C72E139009D987E /* AlarmApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = AlarmApp.xcdatamodel; sourceTree = "<group>"; };
 		E22D06CE2C6B4BC700CC13A9 /* WorldClockTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldClockTableCell.swift; sourceTree = "<group>"; };
 		E22D06D32C6BBCF100CC13A9 /* WorldClockModalController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldClockModalController.swift; sourceTree = "<group>"; };
 		E22D06D52C6C1B0A00CC13A9 /* CountriesListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountriesListTableViewCell.swift; sourceTree = "<group>"; };
-		E2333A242C72D4FE00F43CA1 /* AlarmApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = AlarmApp.xcdatamodel; sourceTree = "<group>"; };
 		E2AE2CAD2C6CB23F0043CC63 /* CountriesListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountriesListModel.swift; sourceTree = "<group>"; };
 		E2AE2CAF2C6CB2580043CC63 /* CountriesListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountriesListViewModel.swift; sourceTree = "<group>"; };
+		E2C4AA202C72E3500056B01D /* AlarmApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = AlarmApp.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,7 +95,7 @@
 		43A44ACA2C6B346E00ADF614 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
-				C402F9312C72E139009D987E /* AlarmApp.xcdatamodeld */,
+				E2C4AA1F2C72E3500056B01D /* AlarmApp.xcdatamodeld */,
 				43A44AD72C6C8DCB00ADF614 /* Alarm+CoreDataClass.swift */,
 				43A44AD82C6C8DCB00ADF614 /* Alarm+CoreDataProperties.swift */,
 			);
@@ -289,12 +287,12 @@
 				E2333A202C6F109300F43CA1 /* (null) in Sources */,
 				C2C2B23D2C69DF9100D526B3 /* TimerViewModel.swift in Sources */,
 				C2C2B2352C69DEB300D526B3 /* StopwatchController.swift in Sources */,
+				E2C4AA212C72E3500056B01D /* AlarmApp.xcdatamodeld in Sources */,
 				C2C2B21E2C69D82300D526B3 /* AlarmController.swift in Sources */,
 				C2C2B21A2C69D82300D526B3 /* AppDelegate.swift in Sources */,
 				43A44AD92C6C8DCB00ADF614 /* Alarm+CoreDataClass.swift in Sources */,
 				43A44ADA2C6C8DCB00ADF614 /* Alarm+CoreDataProperties.swift in Sources */,
 				C2C2B2332C69D8B100D526B3 /* TimerController.swift in Sources */,
-				C402F9332C72E139009D987E /* AlarmApp.xcdatamodeld in Sources */,
 				C2C2B23B2C69DF7D00D526B3 /* AlarmViewModel.swift in Sources */,
 				C2C2B2412C69DFA900D526B3 /* WorldClockViewModel.swift in Sources */,
 				C2C2B2372C69DEC200D526B3 /* WorldClockController.swift in Sources */,
@@ -562,14 +560,14 @@
 /* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
-		C402F9312C72E139009D987E /* AlarmApp.xcdatamodeld */ = {
+		E2C4AA1F2C72E3500056B01D /* AlarmApp.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				C402F9322C72E139009D987E /* AlarmApp.xcdatamodel */,
+				E2C4AA202C72E3500056B01D /* AlarmApp.xcdatamodel */,
 			);
-			currentVersion = C402F9322C72E139009D987E /* AlarmApp.xcdatamodel */;
+			currentVersion = E2C4AA202C72E3500056B01D /* AlarmApp.xcdatamodel */;
 			name = AlarmApp.xcdatamodeld;
-			path = "/Users/kimsolbi/Desktop/Development/Alarm-App/Model/CoreData/AlarmApp.xcdatamodeld";
+			path = "/Users/t2023-m0102/Desktop/Sparta/Alarm-App/Model/CoreData/AlarmApp.xcdatamodeld";
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};
