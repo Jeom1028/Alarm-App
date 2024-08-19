@@ -86,7 +86,7 @@ class TimerController: UIViewController {
 
     private var pickersStackView: UIStackView!
     
-    private let soundOptions = ["기상 나팔", "불침번", "미정"]
+    private let sound = ["기상나팔", "불침번", "행정반"]
     private var selectedSound: String?
     
     override func viewDidLoad() {
@@ -284,13 +284,13 @@ extension TimerController: UIPickerViewDataSource, UIPickerViewDelegate {
 extension TimerController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return soundOptions.count
+        return sound.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: TimerSoundCell.id, for: indexPath) as! TimerSoundCell
         
-        let soundName = soundOptions[indexPath.row]
+        let soundName = sound[indexPath.row]
         let isChecked = soundName == selectedSound
         cell.configure(with: soundName, isChecked: isChecked)
         
@@ -298,7 +298,8 @@ extension TimerController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectedSound = soundOptions[indexPath.row]
+        selectedSound = sound[indexPath.row]
+        viewmodel.sound = selectedSound ?? "default" 
         tableView.reloadData()
     }
 }
