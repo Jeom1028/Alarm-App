@@ -36,7 +36,10 @@
 		C2C2B24F2C69FC3100D526B3 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = C2C2B24E2C69FC3100D526B3 /* SnapKit */; };
 		E22D06CF2C6B4BC700CC13A9 /* WorldClockTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E22D06CE2C6B4BC700CC13A9 /* WorldClockTableCell.swift */; };
 		E22D06D42C6BBCF100CC13A9 /* WorldClockModalController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E22D06D32C6BBCF100CC13A9 /* WorldClockModalController.swift */; };
-		E22D06D62C6C1B0A00CC13A9 /* CountriesListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E22D06D52C6C1B0A00CC13A9 /* CountriesListCell.swift */; };
+		E22D06D62C6C1B0A00CC13A9 /* CountriesListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E22D06D52C6C1B0A00CC13A9 /* CountriesListTableViewCell.swift */; };
+		E2333A202C6F109300F43CA1 /* AlarmApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E2333A1E2C6F109300F43CA1 /* AlarmApp.xcdatamodeld */; };
+		E2AE2CAE2C6CB23F0043CC63 /* CountriesListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2AE2CAD2C6CB23F0043CC63 /* CountriesListModel.swift */; };
+		E2AE2CB02C6CB2580043CC63 /* CountriesListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2AE2CAF2C6CB2580043CC63 /* CountriesListViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -67,7 +70,10 @@
 		C2C2B2422C69E07F00D526B3 /* Extension+UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension+UIColor.swift"; sourceTree = "<group>"; };
 		E22D06CE2C6B4BC700CC13A9 /* WorldClockTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldClockTableCell.swift; sourceTree = "<group>"; };
 		E22D06D32C6BBCF100CC13A9 /* WorldClockModalController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldClockModalController.swift; sourceTree = "<group>"; };
-		E22D06D52C6C1B0A00CC13A9 /* CountriesListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountriesListCell.swift; sourceTree = "<group>"; };
+		E22D06D52C6C1B0A00CC13A9 /* CountriesListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountriesListTableViewCell.swift; sourceTree = "<group>"; };
+		E2333A1F2C6F109300F43CA1 /* AlarmApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = AlarmApp.xcdatamodel; sourceTree = "<group>"; };
+		E2AE2CAD2C6CB23F0043CC63 /* CountriesListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountriesListModel.swift; sourceTree = "<group>"; };
+		E2AE2CAF2C6CB2580043CC63 /* CountriesListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountriesListViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -142,6 +148,7 @@
 				C2C2B2382C69DF6E00D526B3 /* Model.swift */,
 				C2C2B2192C69D82300D526B3 /* AppDelegate.swift */,
 				C25A773F2C6B22B5001E2B83 /* TimerModel.swift */,
+				E2AE2CAD2C6CB23F0043CC63 /* CountriesListModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -159,7 +166,7 @@
 				C2C2B2362C69DEC200D526B3 /* WorldClockController.swift */,
 				E22D06CE2C6B4BC700CC13A9 /* WorldClockTableCell.swift */,
 				E22D06D32C6BBCF100CC13A9 /* WorldClockModalController.swift */,
-				E22D06D52C6C1B0A00CC13A9 /* CountriesListCell.swift */,
+				E22D06D52C6C1B0A00CC13A9 /* CountriesListTableViewCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -171,6 +178,7 @@
 				C2C2B23C2C69DF9100D526B3 /* TimerViewModel.swift */,
 				C2C2B23E2C69DF9D00D526B3 /* StopwatchViewModel.swift */,
 				C2C2B2402C69DFA900D526B3 /* WorldClockViewModel.swift */,
+				E2AE2CAF2C6CB2580043CC63 /* CountriesListViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -267,10 +275,14 @@
 				E22D06CF2C6B4BC700CC13A9 /* WorldClockTableCell.swift in Sources */,
 				C2C2B23F2C69DF9D00D526B3 /* StopwatchViewModel.swift in Sources */,
 				C2C2B2432C69E07F00D526B3 /* Extension+UIColor.swift in Sources */,
+				E2AE2CB02C6CB2580043CC63 /* CountriesListViewModel.swift in Sources */,
+				E2AE2CB02C6CB2580043CC63 /* CountriesListViewModel.swift in Sources */,
+				E2AE2CAE2C6CB23F0043CC63 /* CountriesListModel.swift in Sources */,
 				43A44AD02C6B351100ADF614 /* CoreDataManager.swift in Sources */,
 				E22D06D42C6BBCF100CC13A9 /* WorldClockModalController.swift in Sources */,
 				43A44ADF2C70B73500ADF614 /* AlarmSoundCell.swift in Sources */,
 				C2C2B2392C69DF6E00D526B3 /* Model.swift in Sources */,
+				E2333A202C6F109300F43CA1 /* AlarmApp.xcdatamodeld in Sources */,
 				C2C2B23D2C69DF9100D526B3 /* TimerViewModel.swift in Sources */,
 				C2C2B2352C69DEB300D526B3 /* StopwatchController.swift in Sources */,
 				43A44ADD2C708F0500ADF614 /* AlarmApp.xcdatamodeld in Sources */,
@@ -285,7 +297,7 @@
 				C25A77402C6B22B5001E2B83 /* TimerModel.swift in Sources */,
 				43A44AC02C6A025700ADF614 /* MainTabbarController.swift in Sources */,
 				C2C2B21C2C69D82300D526B3 /* SceneDelegate.swift in Sources */,
-				E22D06D62C6C1B0A00CC13A9 /* CountriesListCell.swift in Sources */,
+				E22D06D62C6C1B0A00CC13A9 /* CountriesListTableViewCell.swift in Sources */,
 				43A44AC22C6B1BB700ADF614 /* AlarmModalController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

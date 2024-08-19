@@ -10,6 +10,8 @@ import UIKit
 import SnapKit
 
 class WorldClockModalController: UIViewController {
+  private var viewModel: WorldClockModalViewModel!
+  
   let searchBar: UISearchBar = {
     let searchBar = UISearchBar()
     searchBar.placeholder = "검색"
@@ -17,10 +19,11 @@ class WorldClockModalController: UIViewController {
     return searchBar
   }()
   
-  let CancleButton: UIButton = {
+  lazy var CancleButton: UIButton = {
     let button = UIButton()
     button.setTitle("취소", for: .normal)
     button.setTitleColor(.black, for: .normal)
+    button.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
     return button
   }()
   
@@ -29,21 +32,32 @@ class WorldClockModalController: UIViewController {
     tableView.backgroundColor = .white
     tableView.separatorStyle = .singleLine
     tableView.separatorColor = .darkGray
-    tableView.register(CountriesListCell.self, forCellReuseIdentifier: "CountriesListCell")
+    tableView.register(CountriesListTableViewCell.self, forCellReuseIdentifier: "CountriesListCell")
     return tableView
   }()
-
+  
+  init(viewModel: WorldClockModalViewModel) {
+    self.viewModel = viewModel
+    super.init(nibName: nil, bundle: nil)
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     view.backgroundColor = .white
-    self.navigationItem.title = "도시 선택"
     
     configureUI()
   }
   private func configureUI() {
     
+    self.navigationItem.title = "도시 선택"
+    
     tableView.delegate = self
     tableView.dataSource = self
+    searchBar.delegate = self
     
     view.addSubview(searchBar)
     view.addSubview(CancleButton)
@@ -66,20 +80,36 @@ class WorldClockModalController: UIViewController {
       $0.bottom.equalTo(view.safeAreaLayoutGuide)
     }
   }
+  @objc private func cancelButtonTapped() {
+    dismiss(animated: true, completion: nil)
+  }
+}
+
+extension WorldClockModalController: UISearchBarDelegate {
+  func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+    viewModel.search(for: searchText)
+    tableView.reloadData()
+  }
+  
+  func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+    searchBar.resignFirstResponder()
+  }
 }
 
 extension WorldClockModalController: UITableViewDelegate, UITableViewDataSource {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return 1
+    return viewModel.numberOfItems()
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    guard let cell = tableView.dequeueReusableCell(withIdentifier: "CountriesListCell", for: indexPath) as? CountriesListCell else {
+    guard let cell = tableView.dequeueReusableCell(withIdentifier: "CountriesListCell", for: indexPath) as? CountriesListTableViewCell else {
       return UITableViewCell()
     }
-    cell.backgroundColor = .white
+    let info = viewModel.item(at: indexPath.row)
+    cell.inputData(with: info)
     return cell
   }
+  
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     return 40
   }

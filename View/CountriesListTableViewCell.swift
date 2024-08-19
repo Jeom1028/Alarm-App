@@ -9,11 +9,10 @@ import Foundation
 import UIKit
 import SnapKit
 
-class CountriesListCell: UITableViewCell {
+class CountriesListTableViewCell: UITableViewCell {
   
   private let countryLabel: UILabel = {
     let label = UILabel()
-    label.text = "City, Country"
     label.font = UIFont.systemFont(ofSize: 15)
     label.textColor = .black
     return label
@@ -34,6 +33,9 @@ class CountriesListCell: UITableViewCell {
       $0.leading.equalTo(contentView.snp.leading).offset(20)
       $0.centerY.equalTo(contentView)
     }
+  }
+  func inputData(with info: CountriesListModel) {
+    countryLabel.text = info.timeZone
   }
 }
 
