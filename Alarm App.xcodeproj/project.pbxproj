@@ -33,7 +33,8 @@
 		C2C2B24A2C69FC1F00D526B3 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = C2C2B2492C69FC1F00D526B3 /* RxCocoa */; };
 		C2C2B24C2C69FC1F00D526B3 /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = C2C2B24B2C69FC1F00D526B3 /* RxRelay */; };
 		C2C2B24F2C69FC3100D526B3 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = C2C2B24E2C69FC3100D526B3 /* SnapKit */; };
-		C2C8BCD42C72D4740084FC74 /* AlarmApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C2C8BCD22C72D4740084FC74 /* AlarmApp.xcdatamodeld */; };
+		C402F9302C72E024009D987E /* StopwatchTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C402F92F2C72E024009D987E /* StopwatchTableCell.swift */; };
+		C402F9332C72E139009D987E /* AlarmApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C402F9312C72E139009D987E /* AlarmApp.xcdatamodeld */; };
 		E22D06CF2C6B4BC700CC13A9 /* WorldClockTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E22D06CE2C6B4BC700CC13A9 /* WorldClockTableCell.swift */; };
 		E22D06D42C6BBCF100CC13A9 /* WorldClockModalController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E22D06D32C6BBCF100CC13A9 /* WorldClockModalController.swift */; };
 		E22D06D62C6C1B0A00CC13A9 /* CountriesListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E22D06D52C6C1B0A00CC13A9 /* CountriesListTableViewCell.swift */; };
@@ -67,7 +68,8 @@
 		C2C2B23E2C69DF9D00D526B3 /* StopwatchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopwatchViewModel.swift; sourceTree = "<group>"; };
 		C2C2B2402C69DFA900D526B3 /* WorldClockViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldClockViewModel.swift; sourceTree = "<group>"; };
 		C2C2B2422C69E07F00D526B3 /* Extension+UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension+UIColor.swift"; sourceTree = "<group>"; };
-		C2C8BCD32C72D4740084FC74 /* AlarmApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = AlarmApp.xcdatamodel; sourceTree = "<group>"; };
+		C402F92F2C72E024009D987E /* StopwatchTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopwatchTableCell.swift; sourceTree = "<group>"; };
+		C402F9322C72E139009D987E /* AlarmApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = AlarmApp.xcdatamodel; sourceTree = "<group>"; };
 		E22D06CE2C6B4BC700CC13A9 /* WorldClockTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldClockTableCell.swift; sourceTree = "<group>"; };
 		E22D06D32C6BBCF100CC13A9 /* WorldClockModalController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldClockModalController.swift; sourceTree = "<group>"; };
 		E22D06D52C6C1B0A00CC13A9 /* CountriesListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountriesListTableViewCell.swift; sourceTree = "<group>"; };
@@ -93,7 +95,7 @@
 		43A44ACA2C6B346E00ADF614 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
-				C2C8BCD22C72D4740084FC74 /* AlarmApp.xcdatamodeld */,
+				C402F9312C72E139009D987E /* AlarmApp.xcdatamodeld */,
 				43A44AD72C6C8DCB00ADF614 /* Alarm+CoreDataClass.swift */,
 				43A44AD82C6C8DCB00ADF614 /* Alarm+CoreDataProperties.swift */,
 			);
@@ -161,6 +163,7 @@
 				43A44AC12C6B1BB700ADF614 /* AlarmModalController.swift */,
 				43A44ADE2C70B73500ADF614 /* AlarmSoundCell.swift */,
 				C2C2B2322C69D8B100D526B3 /* TimerController.swift */,
+				C402F92F2C72E024009D987E /* StopwatchTableCell.swift */,
 				C2C2B2342C69DEB300D526B3 /* StopwatchController.swift */,
 				C2C2B2362C69DEC200D526B3 /* WorldClockController.swift */,
 				E22D06CE2C6B4BC700CC13A9 /* WorldClockTableCell.swift */,
@@ -289,11 +292,12 @@
 				43A44AD92C6C8DCB00ADF614 /* Alarm+CoreDataClass.swift in Sources */,
 				43A44ADA2C6C8DCB00ADF614 /* Alarm+CoreDataProperties.swift in Sources */,
 				C2C2B2332C69D8B100D526B3 /* TimerController.swift in Sources */,
-				C2C8BCD42C72D4740084FC74 /* AlarmApp.xcdatamodeld in Sources */,
+				C402F9332C72E139009D987E /* AlarmApp.xcdatamodeld in Sources */,
 				C2C2B23B2C69DF7D00D526B3 /* AlarmViewModel.swift in Sources */,
 				C2C2B2412C69DFA900D526B3 /* WorldClockViewModel.swift in Sources */,
 				C2C2B2372C69DEC200D526B3 /* WorldClockController.swift in Sources */,
 				C25A77402C6B22B5001E2B83 /* TimerModel.swift in Sources */,
+				C402F9302C72E024009D987E /* StopwatchTableCell.swift in Sources */,
 				43A44AC02C6A025700ADF614 /* MainTabbarController.swift in Sources */,
 				C2C2B21C2C69D82300D526B3 /* SceneDelegate.swift in Sources */,
 				E22D06D62C6C1B0A00CC13A9 /* CountriesListTableViewCell.swift in Sources */,
@@ -441,7 +445,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = NVHG2GB4N8;
+				DEVELOPMENT_TEAM = FUB82Y2PRK;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Alarm App/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -469,7 +473,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = NVHG2GB4N8;
+				DEVELOPMENT_TEAM = FUB82Y2PRK;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Alarm App/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -556,14 +560,14 @@
 /* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
-		C2C8BCD22C72D4740084FC74 /* AlarmApp.xcdatamodeld */ = {
+		C402F9312C72E139009D987E /* AlarmApp.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				C2C8BCD32C72D4740084FC74 /* AlarmApp.xcdatamodel */,
+				C402F9322C72E139009D987E /* AlarmApp.xcdatamodel */,
 			);
-			currentVersion = C2C8BCD32C72D4740084FC74 /* AlarmApp.xcdatamodel */;
+			currentVersion = C402F9322C72E139009D987E /* AlarmApp.xcdatamodel */;
 			name = AlarmApp.xcdatamodeld;
-			path = "/Users/t2023-m0117/Desktop/sparta/Alarm App/Model/CoreData/AlarmApp.xcdatamodeld";
+			path = "/Users/kimsolbi/Desktop/Development/Alarm-App/Model/CoreData/AlarmApp.xcdatamodeld";
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};
