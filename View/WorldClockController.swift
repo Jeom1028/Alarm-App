@@ -18,12 +18,20 @@ class WorldClockController: UIViewController {
     return tableView
   }()
   
+  lazy var addButton: UIBarButtonItem = {
+    let button = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(addButtonTapped))
+    return button
+  }()
+  
+  lazy var editButton: UIBarButtonItem = {
+    let button = UIBarButtonItem(title: "편집", style: .plain, target: self, action: #selector(editButtonTapped))
+    return button
+  }()
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     view.backgroundColor = .white
     configureUi()
-    AddCountries()
-    Edit()
   }
   
   func configureUi() {
@@ -32,26 +40,28 @@ class WorldClockController: UIViewController {
     tableView.delegate = self
     tableView.dataSource = self
     
+    self.navigationItem.rightBarButtonItem = addButton
+    self.navigationItem.leftBarButtonItem = editButton
+    
     tableView.snp.makeConstraints {
       $0.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(10)
       $0.top.equalTo(view.safeAreaLayoutGuide)
       $0.bottom.equalTo(view.safeAreaLayoutGuide)
     }
   }
-  private func AddCountries() {
-    let plusButton = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(CountriesList))
-    self.navigationItem.rightBarButtonItem = plusButton
+  
+  @objc private func addButtonTapped() {
+    let countriesListViewModel = CountriesListViewModel()
+    let viewModel = WorldClockModalViewModel(countriesListViewModel: countriesListViewModel)
+    let worldClockModalController = WorldClockModalController(viewModel: viewModel)
+    
+    let navigationController = UINavigationController(rootViewController: worldClockModalController)
+    navigationController.modalPresentationStyle = .formSheet
+    present(navigationController, animated: true, completion: nil)
   }
   
-  private func Edit() {
-    let editButton = UIBarButtonItem(title: "편집", style: .plain, target: self, action: .none)
-    self.navigationItem.leftBarButtonItem = editButton
-  }
-
-  @objc func CountriesList() {
-    let plusButton = UINavigationController(rootViewController: WorldClockModalController())
-    plusButton.modalPresentationStyle = .formSheet
-    present(plusButton, animated: true, completion: nil)
+  @objc private func editButtonTapped() {
+    print("여긴 나중에...")
   }
 }
 
@@ -86,11 +96,12 @@ extension WorldClockController: UITableViewDelegate, UITableViewDataSource {
     
     headerLabel.snp.makeConstraints {
       $0.leading.equalTo(headerView).offset(10)
+      $0.centerY.equalTo(headerView)
     }
     return headerView
   }
+  
   func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
     return 50
   }
 }
-
