@@ -2,7 +2,7 @@
 //  Alarm+CoreDataClass.swift
 //  Alarm App
 //
-//  Created by 강유정 on 8/13/24.
+//  Created by 강유정 on 8/14/24.
 //
 //
 
@@ -14,7 +14,9 @@ public class Alarm: NSManagedObject {
     public static let className = "Alarm"
     public enum Key {
         static let id = "id"
-        static let time = "time"
+        static let hour = "hour"
+        static let minute = "minute"
+        static let ampm = "ampm"
         static let sound = "sound"
     }
 }
