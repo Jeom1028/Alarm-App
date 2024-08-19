@@ -19,11 +19,13 @@ class TimerController: UIViewController {
     private let minutesPicker = UIPickerView()
     private let secondsPicker = UIPickerView()
     
-    private let timerImage: UIImageView = {
-        let image = UIImageView()
-        image.image = UIImage(named: "timer")
-        return image
+    private let timerImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "timer")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
     }()
+    
     private let startButton: UIButton = {
         let button = UIButton()
         button.setTitle("시작", for: .normal)
@@ -113,7 +115,13 @@ class TimerController: UIViewController {
         pickersStackView.distribution = .fillEqually
         pickersStackView.spacing = 10
         
-        [pickersStackView, timeLabel, progressBar, startButton, cancleButton, soundsLabel, timertableView].forEach { view.addSubview($0) }
+        [timerImageView, pickersStackView, timeLabel, progressBar, startButton, cancleButton, soundsLabel, timertableView].forEach { view.addSubview($0) }
+        
+        timerImageView.snp.makeConstraints {
+            $0.bottom.equalTo(progressBar.snp.top).inset(10)
+            $0.centerX.equalTo(progressBar.snp.right).inset(20) // Initially, place it at the start of the progressBar
+            $0.width.height.equalTo(70) // Adjust size as needed
+        }
         
         progressBar.snp.makeConstraints {
             $0.bottom.equalTo(pickersStackView.snp.top).offset(-10)
@@ -157,6 +165,7 @@ class TimerController: UIViewController {
             $0.height.equalTo(130)
         }
     }
+
     
     @objc private func timeLabelTapped() {
         guard viewmodel.timerState.value == .stopped else { return }
@@ -228,9 +237,25 @@ class TimerController: UIViewController {
         
         viewmodel.progress
             .observe(on: MainScheduler.instance)
-            .bind(to: progressBar.rx.progress)
-            .disposed(by: disposBag)
+            .subscribe(onNext: { [weak self] progress in
+                guard let self = self else { return }
+                self.progressBar.progress = progress
+                
+                // progressBar의 전체 길이와 진행률을 기반으로 이미지 위치 계산
+                let progressBarWidth = self.progressBar.frame.width
+                let progressBarMinX = self.progressBar.frame.minX
+                let imageWidth = self.timerImageView.frame.width
+                
+                // 이미지의 새로운 중앙 x 좌표를 계산
+                let newCenterX = progressBarMinX + (progressBarWidth * CGFloat(progress)) - (imageWidth / 2)
+                
+                // 이미지 위치 업데이트
+                UIView.animate(withDuration: 1) {
+                    self.timerImageView.center.x = newCenterX
+                }
+            }).disposed(by: disposBag)
     }
+
 }
 
 
