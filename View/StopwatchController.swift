@@ -114,23 +114,25 @@ class StopwatchController: UIViewController, UITableViewDataSource, UITabBarDele
     //    let DoublelapTimeData = lapTimeData.map{Double($0)!}
     //    let lapCounter = currentTimeData - DoublelapTimeData.last
     
-    if indexPath.row == 0 {
-      // 첫 번째 랩은 단순히 기록된 랩 타임을 표시
-      cell.lapTimeLabel.text = lapTimeData[indexPath.row]
-    } else {
-      //lapTimeData 배열에서 마지막으로 추가된 요소 가져와서 더블값으로 변경(계산이 필요하므로)
-      if let lastLapTimeData = lapTimeData.last,
-         let lastLapTimeToDouble = timeStringToDouble(lastLapTimeData) {
-        
-        //현재시간 - 마지막 랩타임
-        let lapTimeDifference = currentTimeData - lastLapTimeToDouble
-        cell.lapTimeLabel.text = "\(lapTimeDifference)"
-        print(currentTimeData)
-        print(lastLapTimeToDouble)
-      } else {
-        cell.lapTimeLabel.text = "00:00.00"
-      }
-    }
+    cell.lapTimeLabel.text = lapTimeData[lapTimeData.count-indexPath.row-1]
+//    if indexPath.row == 0 {
+//      // 첫 번째 랩은 단순히 기록된 랩 타임을 표tl
+//      cell.lapTimeLabel.text = lapTimeData[indexPath.row]
+//    } else {
+//      //lapTimeData 배열에서 마지막으로 추가된 요소 가져와서 더블값으로 변경(계산이 필요하므로)
+//      if let lastLapTimeData = lapTimeData.last,
+//         let lastLapTimeToDouble = timeStringToDouble(lastLapTimeData) {
+//        
+//        //현재시간 - 마지막 랩타임
+//        let lapTimeDifference = currentTimeData - lastLapTimeToDouble
+//        cell.lapTimeLabel.text = "\(lapTimeDifference)"
+//        print(currentTimeData)
+//        print(lastLapTimeToDouble)
+//
+//      } else {
+//        cell.lapTimeLabel.text = "00:00.00"
+//      }
+//    }
     return cell
   }
   
