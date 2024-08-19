@@ -13,7 +13,6 @@ class CountriesListTableViewCell: UITableViewCell {
   
   private let countryLabel: UILabel = {
     let label = UILabel()
-    //    label.text = "Country"
     label.font = UIFont.systemFont(ofSize: 15)
     label.textColor = .black
     return label

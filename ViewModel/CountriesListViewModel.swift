@@ -9,18 +9,23 @@ import Foundation
 
 class CountriesListViewModel {
   var countriesList: [CountriesListModel] = []
-  let locale = Locale(identifier: "ko-KR")
+  
   init() {
     setupCountriesList()
   }
   
   private func setupCountriesList() {
     let timeZones = TimeZone.knownTimeZoneIdentifiers
+    
     for timeZone in timeZones {
-      let timeZoneKr = TimeZone(identifier: timeZone)
       if timeZone.contains("/") {
-        let countriesInfo = CountriesListModel(timeZone: timeZone)
-        countriesList.append(countriesInfo)
+        let components = timeZone.split(separator: "/")
+        if components.count == 2 {
+          let city = String(components[1])
+          
+          let countriesInfo = CountriesListModel(timeZone: city)
+          countriesList.append(countriesInfo)
+        }
       }
     }
   }
