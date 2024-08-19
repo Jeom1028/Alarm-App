@@ -22,7 +22,7 @@ class StopwatchController: UIViewController, UITableViewDataSource, UITabBarDele
   let timeLabel = {
     let label = UILabel()
     label.text = "00:00.00"
-    label.font = UIFont.systemFont(ofSize: 60, weight: .bold)
+    label.font = UIFont.systemFont(ofSize: 65, weight: .bold)
     //    label.textAlignment = .center
     return label
   }()
@@ -31,7 +31,7 @@ class StopwatchController: UIViewController, UITableViewDataSource, UITabBarDele
     let button = UIButton()
     button.setTitle("시작", for: .normal)
     button.setTitleColor(.white, for: .normal)
-    button.layer.cornerRadius = 30
+    button.layer.cornerRadius = 40
     button.backgroundColor = .olveDrab.withAlphaComponent(0.7)
     return button
   }()
@@ -39,7 +39,7 @@ class StopwatchController: UIViewController, UITableViewDataSource, UITabBarDele
   let lapAndResetButton = {
     let button = UIButton()
     button.setTitle("랩", for: .normal)
-    button.layer.cornerRadius = 30
+    button.layer.cornerRadius = 40
     button.backgroundColor = .black.withAlphaComponent(0.7)
     return button
   }()
@@ -74,24 +74,24 @@ class StopwatchController: UIViewController, UITableViewDataSource, UITabBarDele
       $0.top.equalToSuperview().inset(150)
       $0.centerX.equalToSuperview()
       $0.height.equalTo(50)
-      $0.width.equalTo(270)
+      $0.width.equalTo(300)
     }
     
     buttonStackView.snp.makeConstraints {
-      $0.top.equalTo(timeLabel.snp.bottom).offset(50)
+      $0.top.equalTo(timeLabel.snp.bottom).offset(100)
       $0.centerX.equalToSuperview()
     }
     
     startAndPauseButton.snp.makeConstraints {
-      $0.width.height.equalTo(60)
+      $0.width.height.equalTo(80)
     }
     
     lapAndResetButton.snp.makeConstraints {
-      $0.width.height.equalTo(60)
+      $0.width.height.equalTo(80)
     }
     
     tableView.snp.makeConstraints {
-      $0.top.equalTo(buttonStackView.snp.bottom).offset(70)
+      $0.top.equalTo(buttonStackView.snp.bottom).offset(35)
       $0.left.right.bottom.equalToSuperview()
     }
   }
@@ -99,6 +99,7 @@ class StopwatchController: UIViewController, UITableViewDataSource, UITabBarDele
   func setupTableView() {
     tableView.dataSource = self
     tableView.register(StopwatchTableCell.self, forCellReuseIdentifier: "TableViewCell")
+    tableView.separatorInset = UIEdgeInsets(top: 0, left: 18, bottom: 0, right: 18)
   }
   
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -111,28 +112,10 @@ class StopwatchController: UIViewController, UITableViewDataSource, UITabBarDele
     }
     let lapNumber = lapTimeData.count - indexPath.row
     cell.lapTagLabel.text = "Lap \(lapNumber)"
-    //    let DoublelapTimeData = lapTimeData.map{Double($0)!}
-    //    let lapCounter = currentTimeData - DoublelapTimeData.last
     
+    //lapTimeData.count-indexPath.row-1 는 배열의 마지막 요소에서부터 차례대로 접근하기 위함(테이블뷰가 역순이므로 동일한 순서로 가져와야 오류가 발생하지 않는다)
     cell.lapTimeLabel.text = lapTimeData[lapTimeData.count-indexPath.row-1]
-//    if indexPath.row == 0 {
-//      // 첫 번째 랩은 단순히 기록된 랩 타임을 표tl
-//      cell.lapTimeLabel.text = lapTimeData[indexPath.row]
-//    } else {
-//      //lapTimeData 배열에서 마지막으로 추가된 요소 가져와서 더블값으로 변경(계산이 필요하므로)
-//      if let lastLapTimeData = lapTimeData.last,
-//         let lastLapTimeToDouble = timeStringToDouble(lastLapTimeData) {
-//
-//        //현재시간 - 마지막 랩타임
-//        let lapTimeDifference = currentTimeData - lastLapTimeToDouble
-//        cell.lapTimeLabel.text = "\(lapTimeDifference)"
-//        print(currentTimeData)
-//        print(lastLapTimeToDouble)
-//
-//      } else {
-//        cell.lapTimeLabel.text = "00:00.00"
-//      }
-//    }
+
     return cell
   }
   
@@ -145,10 +128,14 @@ class StopwatchController: UIViewController, UITableViewDataSource, UITabBarDele
   func startTimer() {
     if timer == nil {
       startAndPauseButton.setTitle("중단", for: .normal)
+      startAndPauseButton.backgroundColor = .red.withAlphaComponent(0.7)
       timer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true) //0.01초 단위로 updateTimer 반복(repeats)
       lapAndResetButton.isEnabled = true
+      lapAndResetButton.setTitle("랩", for: .normal)
+      lapAndResetButton.backgroundColor = .black.withAlphaComponent(0.7)
     } else {
       startAndPauseButton.setTitle("시작", for: .normal)
+      startAndPauseButton.backgroundColor = .olveDrab.withAlphaComponent(0.7)
       timer?.invalidate() //타이머 중단 메서드
       timer = nil
       lapAndResetButton.setTitle("재설정", for: .normal)
@@ -171,10 +158,12 @@ class StopwatchController: UIViewController, UITableViewDataSource, UITabBarDele
       let lapTime = currentTimeData - lastLapTimeData
       let StringLapTime = doubleToTimeString(lapTime) //Double 타입의 time을 String으로 변환하여 텍스트 노출
       lapTimeData.append(StringLapTime)
-      //      lastLapTimeData = currentTimeData
+      lastLapTimeData = currentTimeData
       print(lapTimeData)
       tableView.reloadData()
     } else {
+      lapAndResetButton.setTitle("랩", for: .normal)
+      lapAndResetButton.backgroundColor = .systemGray2
       resetData()
     }
   }
