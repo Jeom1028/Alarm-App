@@ -13,35 +13,29 @@ class AlarmModalController: UIViewController {
     private let datePicker = UIPickerView()
     private let viewModel = AlarmViewModel()
     
-    private let stackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.layer.cornerRadius = 10
-        stackView.backgroundColor = .olveDrab.withAlphaComponent(0.4)
-        stackView.axis = .vertical
-        return stackView
-    }()
-    
     private let soundLabel: UILabel = {
         let label = UILabel()
-        label.text = "사운드"
+        label.text = "사운드 선택"
         label.font = .boldSystemFont(ofSize: 15)
         label.textColor = .gray
         label.textAlignment = .left
         return label
     }()
     
-    private let soundDataLabel: UIButton = {
-        let label = UIButton()
-        label.setTitle("안 함 ＞", for: .normal)
-        label.titleLabel?.font = .systemFont(ofSize: 14)
-        label.setTitleColor(.gray, for: .normal)
-        label.contentHorizontalAlignment = .right
-        return label
+    private let tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.backgroundColor = .olveDrab.withAlphaComponent(0.3)
+        tableView.layer.cornerRadius = 15
+        tableView.rowHeight = 45 // 또는 적절한 높이로 설정
+        return tableView
     }()
     
     private let hours = Array(1...12)
     private let minutes = Array(0...59)
     private let ampm = ["오전", "오후"]
+    private let sound = ["기상나팔", "불침번", "미정", "안함"] // 사운드 목록
+    
+    private var selectedSound: String = "" // 선택된 사운드 이름을 저장할 변수
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,6 +47,12 @@ class AlarmModalController: UIViewController {
         
         datePicker.delegate = self
         datePicker.dataSource = self
+        
+        tableView.dataSource = self
+          tableView.delegate = self
+        // tableView 셀 등록
+        tableView.register(AlarmSoundCell.self, forCellReuseIdentifier: AlarmSoundCell.id)
+        
     }
     
     //MARK: - 바 버튼을 설정하는 메서드 - YJ
@@ -76,7 +76,8 @@ class AlarmModalController: UIViewController {
     private func setupUI() {
         [
             datePicker,
-            stackView,
+            soundLabel,
+            tableView
         ].forEach { view.addSubview($0) }
         
         datePicker.snp.makeConstraints {
@@ -85,26 +86,17 @@ class AlarmModalController: UIViewController {
             $0.width.equalToSuperview().inset(20)
         }
         
-        stackView.snp.makeConstraints {
+        soundLabel.snp.makeConstraints {
             $0.top.equalTo(datePicker.snp.bottom).offset(30)
             $0.centerX.equalToSuperview()
-            $0.height.equalTo(40)
+            $0.width.equalToSuperview().inset(35)
+        }
+        
+        tableView.snp.makeConstraints {
+            $0.top.equalTo(soundLabel.snp.bottom).offset(10)
+            $0.centerX.equalToSuperview()
+            $0.height.equalTo(180)
             $0.width.equalToSuperview().inset(25)
-        }
-        
-        [
-            soundLabel,
-            soundDataLabel,
-        ].forEach { stackView.addArrangedSubview($0) }
-        
-        soundLabel.snp.makeConstraints {
-            $0.centerY.equalToSuperview()
-            $0.leading.equalToSuperview().offset(20)
-        }
-        
-        soundDataLabel.snp.makeConstraints {
-            $0.centerY.equalToSuperview()
-            $0.trailing.equalToSuperview().inset(20)
         }
     }
     
@@ -121,9 +113,14 @@ class AlarmModalController: UIViewController {
         let minute = minutes[datePicker.selectedRow(inComponent: 2)]
         
         // Core Data에 저장
-        viewModel.addAlarm(hour: hour, minute: minute, ampm: ampm)
+        viewModel.addAlarm(hour: hour, minute: minute, ampm: ampm, sound: selectedSound)
 
         dismiss(animated: true, completion: nil) // 모달 닫기
+    }
+    
+    // 선택된 사운드 이름을 받는 메서드
+    func didSelectSound(_ sound: String) {
+        selectedSound = sound
     }
 }
 
@@ -162,4 +159,26 @@ extension AlarmModalController: UIPickerViewDelegate, UIPickerViewDataSource {
         }
     }
 }
-
+    
+//MARK: - TableView 설정 - YJ
+extension AlarmModalController: UITableViewDataSource, UITableViewDelegate {
+    
+    // 각 섹션의 행 수를 반환하는 메서드
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return sound.count
+    }
+    
+    // 각 셀을 구성하는 메서드
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: AlarmSoundCell.id, for: indexPath) as! AlarmSoundCell
+        
+        let soundName = sound[indexPath.row]
+        cell.configure(with: soundName)
+        
+        return cell    }
+    
+    // 셀을 선택했을 때 호출되는 메서드
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        selectedSound = sound[indexPath.row]
+    }
+}
