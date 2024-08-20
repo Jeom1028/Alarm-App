@@ -8,5 +8,5 @@
 import Foundation
 
 struct CountriesListModel {
-    let timeZone: String
+  let timeZone: String
 }

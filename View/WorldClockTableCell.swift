@@ -10,7 +10,7 @@ import SnapKit
 import UIKit
 
 class WorldClockTableCell: UITableViewCell {
-  private let countryName: UILabel = {
+  let countryName: UILabel = {
     let label = UILabel()
     label.text = "서울"
     label.font = UIFont.systemFont(ofSize: 30)
@@ -18,7 +18,7 @@ class WorldClockTableCell: UITableViewCell {
     return label
   }()
   
-  private let countryTime: UILabel = {
+  let countryTime: UILabel = {
     let label = UILabel()
     label.text = "00:00"
     label.font = UIFont.systemFont(ofSize: 45)
@@ -27,7 +27,7 @@ class WorldClockTableCell: UITableViewCell {
     return label
   }()
   
-  private let ampmLabel: UILabel = {
+  let ampmLabel: UILabel = {
     let label = UILabel()
     label.text = "오전"
     label.font = UIFont.systemFont(ofSize: 20)
@@ -35,9 +35,9 @@ class WorldClockTableCell: UITableViewCell {
     return label
   }()
   
-  private let differenceLabel: UILabel = {
+  let differenceLabel: UILabel = {
     let label = UILabel()
-    label.text = "오늘, +6시간"
+    label.text = "+6시간"
     label.font = UIFont.systemFont(ofSize: 15)
     label.textColor = .black
     label.textAlignment = .left
@@ -78,5 +78,12 @@ class WorldClockTableCell: UITableViewCell {
       $0.leading.equalTo(contentView.snp.leading).offset(15)
       $0.bottom.equalTo(countryName.snp.top).offset(0)
     }
+  }
+  
+  func configure(with model: WorldClockModel, currentTime: String, ampm: String, timeDifference: String) {
+    countryName.text = model.cityName
+    countryTime.text = currentTime
+    ampmLabel.text = ampm
+    differenceLabel.text = timeDifference
   }
 }
