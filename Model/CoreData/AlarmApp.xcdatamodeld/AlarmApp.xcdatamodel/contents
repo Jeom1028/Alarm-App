@@ -7,7 +7,7 @@
         <attribute name="minute" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="sound" optional="YES" attributeType="String"/>
     </entity>
-    <entity name="WorldClock" representedClassName="WorldClock" syncable="YES" codeGenerationType="class">
+    <entity name="WorldClock" representedClassName="WorldClock" syncable="YES">
         <attribute name="cityName" optional="YES" attributeType="String"/>
         <attribute name="timeZone" optional="YES" attributeType="String"/>
     </entity>
