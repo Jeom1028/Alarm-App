@@ -27,6 +27,7 @@ class StopwatchController: UIViewController, UITableViewDataSource, UITabBarDele
 //    label.font = UIFont.systemFont(ofSize: 65, weight: .bold)
     label.font = UIFont.monospacedDigitSystemFont(ofSize: 65, weight: UIFont.Weight.bold)
     label.textAlignment = .center
+
     return label
   }()
   
@@ -82,8 +83,8 @@ class StopwatchController: UIViewController, UITableViewDataSource, UITabBarDele
       $0.centerX.equalToSuperview()
 //      $0.trailing.equalToSuperview().inset(5)
 //      $0.leading.equalToSuperview().inset(-5)
-      $0.height.equalTo(100)
-      $0.width.equalTo(400)
+      $0.height.equalTo(50)
+      $0.width.equalTo(300)
     }
     
     buttonStackView.snp.makeConstraints {
@@ -124,7 +125,6 @@ class StopwatchController: UIViewController, UITableViewDataSource, UITabBarDele
     
     //lapTimeData.count-indexPath.row-1 는 배열의 마지막 요소에서부터 차례대로 접근하기 위함(테이블뷰가 역순이므로 동일한 순서로 가져와야 오류가 발생하지 않는다)
     cell.lapTimeLabel.text = lapTimeData[lapTimeData.count-indexPath.row-1]
-    
     return cell
   }
   
@@ -138,7 +138,7 @@ class StopwatchController: UIViewController, UITableViewDataSource, UITabBarDele
     if timer == nil {
       startAndPauseButton.setTitle("중단", for: .normal)
       startAndPauseButton.backgroundColor = .red.withAlphaComponent(0.7)
-      
+  
       timer = DispatchSource.makeTimerSource(queue: DispatchQueue.global()) //백그라운드 스레드에서 타이머 실행(UI가 아니므로)
       timer?.schedule(deadline: .now(), repeating: 0.01) //타이머 시작시간과 반복되는 주기 설정(즉시 시작 및 0.01초마다 반복)
       
