@@ -34,6 +34,7 @@ class WorldClockController: UIViewController {
     super.viewDidLoad()
     view.backgroundColor = .white
     configureUI()
+    tableView.reloadData()
   }
   
   private func configureUI() {

@@ -23,7 +23,20 @@ extension Alarm {
     @NSManaged public var ampm: String?
 
 }
+extension WorldClock {
+  
+  @nonobjc public class func fetchRequest() -> NSFetchRequest<WorldClock> {
+    return NSFetchRequest<WorldClock>(entityName: "WorldClock")
+  }
+  
+  @NSManaged public var cityName: String?
+  @NSManaged public var timeZone: String?
+}
 
 extension Alarm : Identifiable {
 
+}
+
+extension WorldClock : Identifiable {
+  
 }
