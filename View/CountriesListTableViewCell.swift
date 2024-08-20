@@ -38,6 +38,3 @@ class CountriesListTableViewCell: UITableViewCell {
     countryLabel.text = info.timeZone
   }
 }
-
-
-

@@ -28,15 +28,16 @@ class WorldClockController: UIViewController {
     return button
   }()
   
+  private var viewModel = WorldClockViewModel()
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     view.backgroundColor = .white
-    configureUi()
+    configureUI()
   }
   
-  func configureUi() {
+  private func configureUI() {
     view.addSubview(tableView)
-    
     tableView.delegate = self
     tableView.dataSource = self
     
@@ -52,8 +53,11 @@ class WorldClockController: UIViewController {
   
   @objc private func addButtonTapped() {
     let countriesListViewModel = CountriesListViewModel()
-    let viewModel = WorldClockModalViewModel(countriesListViewModel: countriesListViewModel)
-    let worldClockModalController = WorldClockModalController(viewModel: viewModel)
+    let worldClockModalViewModel = WorldClockModalViewModel(countriesListViewModel: countriesListViewModel)
+    let worldClockModalController = WorldClockModalController(viewModel: worldClockModalViewModel, onCitySelected: { [weak self] cityName, timeZone in
+      self?.viewModel.addClock(cityName: cityName, timeZone: timeZone)
+      self?.tableView.reloadData()
+    })
     
     let navigationController = UINavigationController(rootViewController: worldClockModalController)
     navigationController.modalPresentationStyle = .formSheet
@@ -67,15 +71,20 @@ class WorldClockController: UIViewController {
 
 extension WorldClockController: UITableViewDelegate, UITableViewDataSource {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return 1
+    return viewModel.numberOfItems()
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     guard let cell = tableView.dequeueReusableCell(withIdentifier: "WorldClockTableCell", for: indexPath) as? WorldClockTableCell else {
       return UITableViewCell()
     }
-    cell.backgroundColor = .white
-    cell.selectionStyle = .none
+    
+    let clockModel = viewModel.clock(at: indexPath.row)
+    let currentTime = viewModel.calculateCurrentTime(for: clockModel)
+    let ampm = viewModel.calculateAMPM(for: clockModel)
+    let timeDifference = viewModel.calculateTimeDifference(for: clockModel)
+    
+    cell.configure(with: clockModel, currentTime: currentTime, ampm: ampm, timeDifference: timeDifference)
     return cell
   }
   
