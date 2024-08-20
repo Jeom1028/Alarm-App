@@ -56,8 +56,11 @@ class TimerViewModel: NSObject, UNUserNotificationCenterDelegate {
         }
         
         startBackgroundTask()
-        print("Starting timer and scheduling notification")
-        scheduleNotification(in: totalDuration)
+        
+        // 알람을 기존 시간에 맞춰 재예약
+        let remainingTime = timerModel.remainingTime
+        print("Starting timer and scheduling notification with remaining time: \(remainingTime) seconds")
+        scheduleNotification(in: TimeInterval(remainingTime))
     }
 
     func pauseTimer() {
@@ -65,8 +68,11 @@ class TimerViewModel: NSObject, UNUserNotificationCenterDelegate {
         timerState.accept(.paused)
         timer?.invalidate()
         endBackgroundTask()
+        
+        // 알람 취소
+        removePendingNotifications()
     }
-    
+
     func resetTimer() {
         timer?.invalidate()
         timerState.accept(.stopped)
@@ -77,7 +83,6 @@ class TimerViewModel: NSObject, UNUserNotificationCenterDelegate {
         removePendingNotifications()
         stopSound()  // 타이머 초기화 시 사운드 멈추기
     }
-
 
     private func tick() {
         timerModel.tick()
