@@ -11,6 +11,7 @@ import SnapKit
 
 class WorldClockModalController: UIViewController {
   private var viewModel: WorldClockModalViewModel!
+  private let onCitySelected: (String, String) -> Void
   
   let searchBar: UISearchBar = {
     let searchBar = UISearchBar()
@@ -19,7 +20,7 @@ class WorldClockModalController: UIViewController {
     return searchBar
   }()
   
-  lazy var CancleButton: UIButton = {
+  lazy var cancelButton: UIButton = {
     let button = UIButton()
     button.setTitle("취소", for: .normal)
     button.setTitleColor(.black, for: .normal)
@@ -36,8 +37,9 @@ class WorldClockModalController: UIViewController {
     return tableView
   }()
   
-  init(viewModel: WorldClockModalViewModel) {
+  init(viewModel: WorldClockModalViewModel, onCitySelected: @escaping (String, String) -> Void) {
     self.viewModel = viewModel
+    self.onCitySelected = onCitySelected
     super.init(nibName: nil, bundle: nil)
   }
   
@@ -48,11 +50,10 @@ class WorldClockModalController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     view.backgroundColor = .white
-    
     configureUI()
   }
+  
   private func configureUI() {
-    
     self.navigationItem.title = "도시 선택"
     
     tableView.delegate = self
@@ -60,7 +61,7 @@ class WorldClockModalController: UIViewController {
     searchBar.delegate = self
     
     view.addSubview(searchBar)
-    view.addSubview(CancleButton)
+    view.addSubview(cancelButton)
     view.addSubview(tableView)
     
     searchBar.snp.makeConstraints {
@@ -68,7 +69,7 @@ class WorldClockModalController: UIViewController {
       $0.leading.equalTo(view.safeAreaLayoutGuide).offset(10)
     }
     
-    CancleButton.snp.makeConstraints {
+    cancelButton.snp.makeConstraints {
       $0.centerY.equalTo(searchBar)
       $0.leading.equalTo(searchBar.snp.trailing).offset(10)
       $0.trailing.equalTo(view.safeAreaLayoutGuide).offset(-20)
@@ -80,6 +81,7 @@ class WorldClockModalController: UIViewController {
       $0.bottom.equalTo(view.safeAreaLayoutGuide)
     }
   }
+  
   @objc private func cancelButtonTapped() {
     dismiss(animated: true, completion: nil)
   }
@@ -106,8 +108,18 @@ extension WorldClockModalController: UITableViewDelegate, UITableViewDataSource 
       return UITableViewCell()
     }
     let info = viewModel.item(at: indexPath.row)
-    cell.inputData(with: info)
+    let cityName = String(info.timeZone.split(separator: "/").last ?? "")
+    cell.textLabel?.text = cityName
     return cell
+  }
+  
+  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    let selectedInfo = viewModel.item(at: indexPath.row)
+    let cityName = String(selectedInfo.timeZone.split(separator: "/").last ?? "")
+    let timeZone = selectedInfo.timeZone
+    
+    onCitySelected(cityName, timeZone)
+    dismiss(animated: true, completion: nil)
   }
   
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
