@@ -19,6 +19,13 @@ class TimerController: UIViewController {
     private let minutesPicker = UIPickerView()
     private let secondsPicker = UIPickerView()
     
+    private let forestmageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "forest")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
     private let timerImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "timer")
@@ -115,7 +122,14 @@ class TimerController: UIViewController {
         pickersStackView.distribution = .fillEqually
         pickersStackView.spacing = 10
         
-        [timerImageView, pickersStackView, timeLabel, progressBar, startButton, cancleButton, soundsLabel, timertableView].forEach { view.addSubview($0) }
+        [forestmageView, timerImageView, pickersStackView, timeLabel, progressBar, startButton, cancleButton, soundsLabel, timertableView].forEach { view.addSubview($0) }
+        
+        forestmageView.snp.makeConstraints {
+            $0.bottom.equalTo(progressBar.snp.top).offset(20)
+            $0.centerX.equalToSuperview()
+            $0.height.equalTo(120)
+            $0.width.equalTo(450) // 배경 이미지 크기 조정
+        }
         
         timerImageView.snp.makeConstraints {
             $0.bottom.equalTo(progressBar.snp.top).inset(10)

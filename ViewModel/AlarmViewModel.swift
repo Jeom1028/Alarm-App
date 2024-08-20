@@ -7,14 +7,17 @@
 
 import Foundation
 import RxSwift
-import RxCocoa
 import UserNotifications
 
 class AlarmViewModel {
     
-    private let alarmsSubject = PublishSubject<[Alarm]>()
-    //    private let selectedSoundSubject = BehaviorSubject<String?>(value: nil)
+    let alarmsSubject = BehaviorSubject(value: [Alarm]())
     private let disposeBag = DisposeBag()
+    
+    //MARK: - 알람 리스트 Observable - YJ
+    var alarms: Observable<[Alarm]> {
+        return alarmsSubject.asObservable()
+    }
     
     init() {
         requestNotificationAuthorization()
@@ -23,27 +26,27 @@ class AlarmViewModel {
     
     //MARK: - 코어데이터에서 정보 가져와서 방출하는 메서드 - YJ
     func fetchAlarms() {
-        Observable.create { observer in
-            let coreDataManager = CoreDataManager.shared
-            let fetchedAlarms = coreDataManager.read(entityName: "Alarm", predicate: nil, ofType: Alarm.self)
-            observer.onNext(fetchedAlarms)
-            observer.onCompleted()
-            return Disposables.create()
-        }
-        .bind(to: alarmsSubject)
-        .disposed(by: disposeBag)
+        let coreDataManager = CoreDataManager.shared
+        let fetchedAlarms = coreDataManager.read(entityName: "Alarm", predicate: nil, ofType: Alarm.self)
+        print("\(fetchedAlarms)")
+        alarmsSubject.onNext(fetchedAlarms)
     }
     
     //MARK: - 새로운 알람 데이터를 Core Data에 저장하는 메서드 - YJ
     func addAlarm(hour: Int, minute: Int, ampm: String, sound: String) {
-        let coreDataManager = CoreDataManager.shared
+         let coreDataManager = CoreDataManager.shared
+         
+        // UUID 생성
+        let id = UUID()
+        
         coreDataManager.create(
-            entityName: "Alarm",
+            entityName: Alarm.className,
             values: [
-                "hour": hour,
-                "minute": minute,
-                "ampm": ampm,
-                "sound": sound
+                Alarm.Key.id: id,
+                Alarm.Key.hour: hour,
+                Alarm.Key.minute: minute,
+                Alarm.Key.ampm: ampm,
+                Alarm.Key.sound: sound
             ],
             ofType: Alarm.self
         )
@@ -103,5 +106,26 @@ class AlarmViewModel {
         default:
             return hour
         }
+    }
+    
+    // MARK: - 알람을 삭제하는 메서드 - YJ
+    func deleteAlarm(at index: Int) {
+        var currentAlarms = (try? alarmsSubject.value()) ?? []
+        let alarmToDelete = currentAlarms[index]
+        
+        let coreDataManager = CoreDataManager.shared
+        
+        guard let uuid = alarmToDelete.value(forKey: Alarm.Key.id) as? UUID else {
+            print("알람 UUID를 찾을 수 없음.")
+            return
+        }
+        
+        let predicate = NSPredicate(format: "\(Alarm.Key.id) == %@", uuid as CVarArg)
+        coreDataManager.delete(entityName: Alarm.className, predicate: predicate, ofType: Alarm.self)
+        
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [uuid.uuidString])
+        
+        currentAlarms.remove(at: index)
+        alarmsSubject.onNext(currentAlarms)  // 데이터 소스 업데이트
     }
 }

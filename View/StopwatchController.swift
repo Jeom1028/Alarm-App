@@ -10,7 +10,7 @@ import SnapKit
 
 class StopwatchController: UIViewController, UITableViewDataSource, UITabBarDelegate {
   
-  var timer: Timer?
+  var timer: DispatchSourceTimer?
   var timeInterval: TimeInterval = 0.0 //Double 타입의 초단위 시간(0.0)
   
   var currentTimeData: Double = 0.0 //현재 시간을 담아줄 변수
@@ -19,11 +19,15 @@ class StopwatchController: UIViewController, UITableViewDataSource, UITabBarDele
   var lapTimeData: [String] = [] //기록된 lap time data
   let tableView = UITableView()
   
+  var backgroundTask: UIBackgroundTaskIdentifier = .invalid
+  
   let timeLabel = {
     let label = UILabel()
     label.text = "00:00.00"
-    label.font = UIFont.systemFont(ofSize: 65, weight: .bold)
-    //    label.textAlignment = .center
+//    label.font = UIFont.systemFont(ofSize: 65, weight: .bold)
+    label.font = UIFont.monospacedDigitSystemFont(ofSize: 65, weight: UIFont.Weight.bold)
+    label.textAlignment = .center
+
     return label
   }()
   
@@ -60,6 +64,10 @@ class StopwatchController: UIViewController, UITableViewDataSource, UITabBarDele
     setupTableView()
     setupButtons()
     lapAndResetButton.isEnabled = false
+    
+    //백그라운드 상태를 감지하기 위한 NotificationCenter 설정
+    NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+    NotificationCenter.default.addObserver(self, selector: #selector(appWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
   }
   
   func configureUI() {
@@ -73,6 +81,8 @@ class StopwatchController: UIViewController, UITableViewDataSource, UITabBarDele
     timeLabel.snp.makeConstraints {
       $0.top.equalToSuperview().inset(150)
       $0.centerX.equalToSuperview()
+//      $0.trailing.equalToSuperview().inset(5)
+//      $0.leading.equalToSuperview().inset(-5)
       $0.height.equalTo(50)
       $0.width.equalTo(300)
     }
@@ -115,7 +125,6 @@ class StopwatchController: UIViewController, UITableViewDataSource, UITabBarDele
     
     //lapTimeData.count-indexPath.row-1 는 배열의 마지막 요소에서부터 차례대로 접근하기 위함(테이블뷰가 역순이므로 동일한 순서로 가져와야 오류가 발생하지 않는다)
     cell.lapTimeLabel.text = lapTimeData[lapTimeData.count-indexPath.row-1]
-
     return cell
   }
   
@@ -129,28 +138,54 @@ class StopwatchController: UIViewController, UITableViewDataSource, UITabBarDele
     if timer == nil {
       startAndPauseButton.setTitle("중단", for: .normal)
       startAndPauseButton.backgroundColor = .red.withAlphaComponent(0.7)
-      timer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true) //0.01초 단위로 updateTimer 반복(repeats)
-      lapAndResetButton.isEnabled = true
+  
+      timer = DispatchSource.makeTimerSource(queue: DispatchQueue.global()) //백그라운드 스레드에서 타이머 실행(UI가 아니므로)
+      timer?.schedule(deadline: .now(), repeating: 0.01) //타이머 시작시간과 반복되는 주기 설정(즉시 시작 및 0.01초마다 반복)
+      
+      timer?.setEventHandler(handler: { [weak self] in //이벤트 핸들러
+        guard let self = self else { return }
+        
+        self.timeInterval += 0.01
+        
+        //timeLabel 업데이트는 UI 작업이므로 메인 스레드에서 실행
+        DispatchQueue.main.async {
+          self.timeLabel.text = self.doubleToTimeString(self.timeInterval)
+        
+        if let current = self.timeStringToDouble(self.timeLabel.text ?? "00:00.00") {
+          self.currentTimeData = current
+        }
+        }
+      })
+      timer?.resume()  //타이머 호출 필수!
+      
+      lapAndResetButton.isEnabled = true //랩 버튼 활성화
       lapAndResetButton.setTitle("랩", for: .normal)
       lapAndResetButton.backgroundColor = .black.withAlphaComponent(0.7)
+      
+      startBackgroundTask() //백그라운드 시작
     } else {
       startAndPauseButton.setTitle("시작", for: .normal)
       startAndPauseButton.backgroundColor = .olveDrab.withAlphaComponent(0.7)
-      timer?.invalidate() //타이머 중단 메서드
+      
+      timer?.cancel() //타이머 중단 메서드
       timer = nil
+      
       lapAndResetButton.setTitle("재설정", for: .normal)
+      
+      endBackgroundTask() //백그라운드 종료
     }
   }
   
-  @objc
-  func updateTimer() {
-    timeInterval += 0.01
-    timeLabel.text = doubleToTimeString(timeInterval) //Double 타입의 time을 String으로 변환하여 텍스트 노출
-    
-    if let current = timeStringToDouble(timeLabel.text ?? "00:00.00") {
-      currentTimeData = current //다시 Double로 변환하여 lapTime 계산에 필요한 변수에 저장
-    }
-  }
+//  @objc
+//  func updateTimer() {
+//    timeInterval += 0.01
+//    DispatchQueue.main.async { //timeLabel이 메인 스레드에서 동작하도록 설정함
+//      self.timeLabel.text = self.doubleToTimeString(self.timeInterval) //Double 타입의 time을 String으로 변환하여 텍스트 노출
+//    }
+//    if let current = timeStringToDouble(timeLabel.text ?? "00:00.00") {
+//      currentTimeData = current //다시 Double로 변환하여 lapTime 계산에 필요한 변수에 저장
+//    }
+//  }
   
   @objc
   func lapTimer() {
@@ -178,6 +213,33 @@ class StopwatchController: UIViewController, UITableViewDataSource, UITabBarDele
     tableView.reloadData()
   }
   
+  @objc
+  func appDidEnterBackground() {
+    if timer != nil {
+      startBackgroundTask()
+    }
+  }
+  
+  @objc
+  func appWillEnterForeground() {
+    endBackgroundTask()
+  }
+  
+  func startBackgroundTask() {
+    if backgroundTask == .invalid {
+      backgroundTask = UIApplication.shared.beginBackgroundTask { [weak self] in
+        self?.endBackgroundTask()
+      }
+    }
+  }
+  
+  func endBackgroundTask() {
+    if backgroundTask != .invalid {
+      UIApplication.shared.endBackgroundTask(backgroundTask)
+      backgroundTask = .invalid
+    }
+  }
+  
   func timeStringToDouble(_ timeString: String) -> Double? {
     let components = timeString.split(separator: ":").map { String($0) }
     guard components.count == 2,
@@ -189,8 +251,8 @@ class StopwatchController: UIViewController, UITableViewDataSource, UITabBarDele
       return nil
     }
     
-    let totalSeconds = (minutes * 60) + seconds + (milliseconds / 100.0)
-    return totalSeconds
+    let total = (minutes * 60) + seconds + (milliseconds / 100.0)
+    return total
   }
   
   func doubleToTimeString(_ timeInterval: Double) -> String {
