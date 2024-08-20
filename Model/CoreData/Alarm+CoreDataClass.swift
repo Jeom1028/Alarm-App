@@ -20,3 +20,12 @@ public class Alarm: NSManagedObject {
         static let sound = "sound"
     }
 }
+
+@objc(WorldClock)
+public class WorldClock: NSManagedObject {
+  public static let className = "WorldClock"
+  public enum Key {
+    static let cityName = "cityName"
+    static let timeZone = "timeZone"
+  }
+}

@@ -34,6 +34,7 @@ class WorldClockController: UIViewController {
     super.viewDidLoad()
     view.backgroundColor = .white
     configureUI()
+    tableView.reloadData()
   }
   
   private func configureUI() {
@@ -65,7 +66,10 @@ class WorldClockController: UIViewController {
   }
   
   @objc private func editButtonTapped() {
-    print("여긴 나중에...")
+    let isEditing = tableView.isEditing
+    tableView.setEditing(!isEditing, animated: true)
+    let buttonTitle = isEditing ? "편집" : "완료"
+    self.navigationItem.leftBarButtonItem?.title = buttonTitle
   }
 }
 
