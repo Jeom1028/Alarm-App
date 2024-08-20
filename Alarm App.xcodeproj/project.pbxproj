@@ -598,6 +598,7 @@
 /* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
+
 		C2C8BCE32C7363A90084FC74 /* AlarmApp.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
