@@ -10,6 +10,7 @@ import RxCocoa
 import Foundation
 import UserNotifications
 import UIKit
+import AVFoundation
 
 enum TimerState {
     case stopped
@@ -29,6 +30,9 @@ class TimerViewModel: NSObject, UNUserNotificationCenterDelegate {
     private var totalDuration: TimeInterval = 0
 
     private var backgroundTaskID: UIBackgroundTaskIdentifier = .invalid
+    private var audioPlayer: AVAudioPlayer?
+    
+    var sound: String = "default"
     
     override init() {
         super.init()
@@ -71,19 +75,35 @@ class TimerViewModel: NSObject, UNUserNotificationCenterDelegate {
         updateProgress()
         endBackgroundTask()
         removePendingNotifications()
+        stopSound()  // 타이머 초기화 시 사운드 멈추기
     }
+
 
     private func tick() {
         timerModel.tick()
         print("Tick in ViewModel")
         if timerModel.remainingTime <= 0 {
+            playSound(named: sound)  // 타이머가 종료될 때 사운드 재생
             resetTimer()
         } else {
             updateTimeText()
             updateProgress()
         }
     }
-    
+
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        // Show alert and sound when app is in foreground
+        completionHandler([.banner, .sound])
+    }
+
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        // 사용자가 알림을 눌렀을 때 알람 중지
+        stopSound()
+        removePendingNotifications()
+        completionHandler()
+    }
+
+
     private func updateTimeText() {
         timeText.accept(timerModel.formattedTime())
     }
@@ -112,10 +132,11 @@ class TimerViewModel: NSObject, UNUserNotificationCenterDelegate {
         let content = UNMutableNotificationContent()
         content.title = "기상!!"
         content.body = "3중대 기상!!"
-        content.sound = UNNotificationSound.default
+        content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "\(sound).wav"))
 
         print("Scheduling notification with content: \(content.title), \(content.body)")
 
+        // 알림을 반복적으로 울리도록 설정
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: timeInterval, repeats: false)
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
 
@@ -127,6 +148,7 @@ class TimerViewModel: NSObject, UNUserNotificationCenterDelegate {
             }
         }
     }
+
     
     private func removePendingNotifications() {
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
@@ -145,9 +167,22 @@ class TimerViewModel: NSObject, UNUserNotificationCenterDelegate {
         }
     }
     
-    // UNUserNotificationCenterDelegate method to handle notifications while the app is in the foreground
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        // Show alert and sound when app is in foreground
-        completionHandler([.banner, .sound])
-    }
-}
+    func playSound(named soundName: String) {
+          guard let soundURL = Bundle.main.url(forResource: soundName, withExtension: "wav") else {
+              print("Sound file not found: \(soundName)")
+              return
+          }
+
+          do {
+              audioPlayer = try AVAudioPlayer(contentsOf: soundURL)
+              audioPlayer?.play()
+          } catch {
+              print("Error playing sound: \(error.localizedDescription)")
+          }
+      }
+      
+      func stopSound() {
+          audioPlayer?.stop()
+      }
+  }
+
