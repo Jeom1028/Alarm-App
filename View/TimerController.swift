@@ -168,7 +168,7 @@ class TimerController: UIViewController {
         }
         
         soundsLabel.snp.makeConstraints {
-            $0.top.equalTo(cancleButton.snp.bottom).offset(30)
+            $0.top.equalTo(cancleButton.snp.bottom).offset(50)
             $0.centerX.equalToSuperview()
             $0.width.equalToSuperview().inset(35)
         }
