@@ -6,13 +6,20 @@
 //
 
 import Foundation
+import UIKit
+import CoreData
 
 class WorldClockViewModel {
   private(set) var selectedClocks: [WorldClockModel] = []
   
+  init() {
+    loadClocksFromCoreData()
+  }
+  
   func addClock(cityName: String, timeZone: String) {
     let worldClockModel = WorldClockModel(cityName: cityName, timeZone: timeZone)
     selectedClocks.append(worldClockModel)
+    saveClockToCoreData(cityName: cityName, timeZone: timeZone)
   }
   
   func numberOfItems() -> Int {
@@ -46,5 +53,41 @@ class WorldClockViewModel {
     let currentOffset = TimeZone.current.secondsFromGMT() / 3600
     let difference = offset - currentOffset
     return "\(difference >= 0 ? "+" : "")\(difference)시간"
+  }
+  
+  private func saveClockToCoreData(cityName: String, timeZone: String) {
+    guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+    let managedContext = appDelegate.persistentContainer.viewContext
+    
+    let entity = NSEntityDescription.entity(forEntityName: "WorldClock", in: managedContext)!
+    let worldClock = NSManagedObject(entity: entity, insertInto: managedContext)
+    
+    worldClock.setValue(cityName, forKey: WorldClock.Key.cityName)
+    worldClock.setValue(timeZone, forKey: WorldClock.Key.timeZone)
+    
+    do {
+      try managedContext.save()
+    } catch let error as NSError {
+      print("Could not save. \(error), \(error.userInfo)")
+    }
+  }
+  
+  private func loadClocksFromCoreData() {
+    guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+    let managedContext = appDelegate.persistentContainer.viewContext
+    
+    let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "WorldClock")
+    
+    do {
+      let worldClocks = try managedContext.fetch(fetchRequest)
+      for worldClock in worldClocks {
+        let cityName = worldClock.value(forKey: WorldClock.Key.cityName) as? String ?? ""
+        let timeZone = worldClock.value(forKey: WorldClock.Key.timeZone) as? String ?? ""
+        let worldClockModel = WorldClockModel(cityName: cityName, timeZone: timeZone)
+        selectedClocks.append(worldClockModel)
+      }
+    } catch let error as NSError {
+      print("Could not fetch. \(error), \(error.userInfo)")
+    }
   }
 }
