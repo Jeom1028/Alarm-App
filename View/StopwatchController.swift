@@ -81,8 +81,6 @@ class StopwatchController: UIViewController, UITableViewDataSource, UITabBarDele
     timeLabel.snp.makeConstraints {
       $0.top.equalToSuperview().inset(150)
       $0.centerX.equalToSuperview()
-//      $0.trailing.equalToSuperview().inset(5)
-//      $0.leading.equalToSuperview().inset(-5)
       $0.height.equalTo(50)
       $0.width.equalTo(300)
     }
@@ -120,11 +118,25 @@ class StopwatchController: UIViewController, UITableViewDataSource, UITabBarDele
     guard let cell = tableView.dequeueReusableCell(withIdentifier: "TableViewCell", for: indexPath) as? StopwatchTableCell else {
       return UITableViewCell()
     }
+    
     let lapNumber = lapTimeData.count - indexPath.row
     cell.lapTagLabel.text = "Lap \(lapNumber)"
     
-    //lapTimeData.count-indexPath.row-1 는 배열의 마지막 요소에서부터 차례대로 접근하기 위함(테이블뷰가 역순이므로 동일한 순서로 가져와야 오류가 발생하지 않는다)
-    cell.lapTimeLabel.text = lapTimeData[lapTimeData.count-indexPath.row-1]
+    //테이블뷰가 역순으로 표시되므로 lapTimeData 배열의 끝에서부터 값을 가져옴
+    let lapTime = lapTimeData[lapTimeData.count - indexPath.row - 1]
+    cell.lapTimeLabel.text = lapTime
+    
+    //lapTimeData 배열에서 가장 작은 값과 큰 값에 포인트
+    if let minLapTime = lapTimeData.min(), let maxLapTime = lapTimeData.max() {
+      if lapTime == minLapTime {
+        cell.lapTimeLabel.textColor = .red
+      } else if lapTime == maxLapTime {
+        cell.lapTimeLabel.textColor = .blue
+      } else {
+        cell.lapTimeLabel.textColor = .black
+      }
+    }
+    
     return cell
   }
   
@@ -156,7 +168,7 @@ class StopwatchController: UIViewController, UITableViewDataSource, UITabBarDele
         }
         }
       })
-      timer?.resume()  //타이머 호출 필수!
+      timer?.resume() //타이머 호출 필수!
       
       lapAndResetButton.isEnabled = true //랩 버튼 활성화
       lapAndResetButton.setTitle("랩", for: .normal)
@@ -175,17 +187,6 @@ class StopwatchController: UIViewController, UITableViewDataSource, UITabBarDele
       endBackgroundTask() //백그라운드 종료
     }
   }
-  
-//  @objc
-//  func updateTimer() {
-//    timeInterval += 0.01
-//    DispatchQueue.main.async { //timeLabel이 메인 스레드에서 동작하도록 설정함
-//      self.timeLabel.text = self.doubleToTimeString(self.timeInterval) //Double 타입의 time을 String으로 변환하여 텍스트 노출
-//    }
-//    if let current = timeStringToDouble(timeLabel.text ?? "00:00.00") {
-//      currentTimeData = current //다시 Double로 변환하여 lapTime 계산에 필요한 변수에 저장
-//    }
-//  }
   
   @objc
   func lapTimer() {
