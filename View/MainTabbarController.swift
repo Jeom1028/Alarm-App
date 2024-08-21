@@ -22,7 +22,7 @@ class MainTabbarController: UITabBarController {
         let thirdTab = StopwatchController()
         let fourthTab = TimerController()
         
-        firstTab.tabBarItem = UITabBarItem(title: "세계지도", image: UIImage(systemName: "globe"), tag: 0)
+        firstTab.tabBarItem = UITabBarItem(title: "세계시계", image: UIImage(systemName: "globe"), tag: 0)
         secondTab.tabBarItem = UITabBarItem(title: "알람", image: UIImage(systemName: "alarm"), tag: 1)
         thirdTab.tabBarItem = UITabBarItem(title: "스톱워치", image: UIImage(systemName: "stopwatch"), tag: 2)
         fourthTab.tabBarItem = UITabBarItem(title: "타이머", image: UIImage(systemName: "timer"), tag: 3)
