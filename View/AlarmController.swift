@@ -22,9 +22,6 @@ class AlarmController: UIViewController {
         tableView.separatorStyle = .singleLine
         tableView.separatorColor = .darkGray
         tableView.register(AlarmMainCell.self, forCellReuseIdentifier: AlarmMainCell.id)
-//        // 테이블 뷰의 자동 높이 설정
-//         tableView.rowHeight = UITableView.automaticDimension
-//         tableView.estimatedRowHeight = 100 // 예측 높이 (옵션)
         return tableView
     }()
     
@@ -38,16 +35,6 @@ class AlarmController: UIViewController {
         setupHeaderView()
         setupTableView()
         bindViewModel()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        // 최신 알람 데이터를 가져와서 테이블 뷰를 업데이트
-        viewModel.fetchAlarms()
-//        // 모든 알람 삭제
-//         CoreDataManager.shared.delete(entityName: Alarm.className, predicate: NSPredicate(value: true), ofType: Alarm.self)
-            
     }
     
     // MARK: - Navigation Bar 설정
@@ -66,14 +53,16 @@ class AlarmController: UIViewController {
     // MARK: - 왼쪽 바 버튼이 눌렸을 때 호출되는 메서드
     @objc private func editButtonTapped() {
         let isEditing = tableView.isEditing
-         tableView.setEditing(!isEditing, animated: true)
-         let buttonTitle = isEditing ? "편집" : "완료"
-         self.navigationItem.leftBarButtonItem?.title = buttonTitle
+        tableView.setEditing(!isEditing, animated: true)
+        let buttonTitle = isEditing ? "편집" : "완료"
+        self.navigationItem.leftBarButtonItem?.title = buttonTitle
     }
     
     // MARK: - 오른쪽 바 버튼이 눌렸을 때 호출되는 메서드
     @objc private func plusButtonTapped() {
-        let navigationController = UINavigationController(rootViewController: AlarmModalController())
+        let alarmModalViewModel = viewModel // 현재의 viewModel을 사용
+        let alarmModalController = AlarmModalController(viewModel: alarmModalViewModel)
+        let navigationController = UINavigationController(rootViewController: alarmModalController)
         navigationController.modalPresentationStyle = .formSheet
         present(navigationController, animated: true, completion: nil)
     }
@@ -90,26 +79,26 @@ class AlarmController: UIViewController {
     }
     
     // MARK: - 헤더 뷰 설정 - YJ
-     private func setupHeaderView() {
-         let headerView = AlarmHeaderView()
-         headerView.frame.size = CGSize(width: tableView.frame.width, height: 60) // 헤더 뷰의 크기 조정
-         tableView.tableHeaderView = headerView
-     }
+    private func setupHeaderView() {
+        let headerView = AlarmHeaderView()
+        headerView.frame.size = CGSize(width: tableView.frame.width, height: 60) // 헤더 뷰의 크기 조정
+        tableView.tableHeaderView = headerView
+    }
     
     // MARK: - 바인딩하는 메서드 - YJ
     private func bindViewModel() {
         viewModel.alarms
             .bind(to: tableView.rx.items(cellIdentifier: AlarmMainCell.id, cellType: AlarmMainCell.self)) { _, alarm, cell in
                 cell.configure(with: alarm)
+                
+                // 테이블뷰셀에서 스위치 상태 변경시 호출할 클로저 설정
+                cell.switchChanged = { [weak self] isOn in
+                    self?.viewModel.handleSwitchChanged(id: alarm.id ?? UUID(), isOn: isOn)
+                }
             }
             .disposed(by: disposeBag)
         
-        viewModel.alarms.subscribe(onNext: { updatedAlarms in
-            // tableView reload
-            self.tableView.reloadData()
-        }).disposed(by: disposeBag)
-    
-        // RxSwift로 삭제 버튼 액션 설정
+        // 삭제 버튼 액션 설정
         tableView.rx.itemDeleted
             .subscribe(onNext: { [weak self] indexPath in
                 guard let self = self else { return }

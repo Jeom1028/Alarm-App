@@ -11,7 +11,7 @@ import SnapKit
 class AlarmModalController: UIViewController {
     
     private let datePicker = UIPickerView()
-    private let viewModel = AlarmViewModel()
+    private var viewModel = AlarmViewModel()
     
     private let soundLabel: UILabel = {
         let label = UILabel()
@@ -24,7 +24,7 @@ class AlarmModalController: UIViewController {
     
     private let tableView: UITableView = {
         let tableView = UITableView()
-        tableView.backgroundColor = .olveDrab.withAlphaComponent(0.3)
+        tableView.backgroundColor = .olveDrab.withAlphaComponent(0.4)
         tableView.layer.cornerRadius = 15
         tableView.rowHeight = 45
         return tableView
@@ -36,6 +36,16 @@ class AlarmModalController: UIViewController {
     private let sound = ["기상나팔", "불침번", "행정반", "안함"]
     
     private var selectedSound: String = ""
+    
+    // ViewModel을 외부에서 주입받도록 초기화
+    init(viewModel: AlarmViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -112,14 +122,15 @@ class AlarmModalController: UIViewController {
         let hour = hours[datePicker.selectedRow(inComponent: 1)]
         let minute = minutes[datePicker.selectedRow(inComponent: 2)]
         
-        // Core Data에 저장
-        viewModel.addAlarm(hour: hour, minute: minute, ampm: ampm, sound: selectedSound)
+        // UUID 생성
+        let id = UUID()
         
-        // 알림 예약
-        viewModel.scheduleAlarmNotification(hour: hour, minute: minute, ampm: ampm, sound: selectedSound)
+        // Core Data에 저장
+        viewModel.addAlarm(hour: hour, minute: minute, ampm: ampm, sound: selectedSound, id: id)
         print("\(hour), \(minute), \(ampm), \(selectedSound)")
         
-        dismiss(animated: true, completion: nil) // 모달 닫기
+        // 모달 닫기
+        dismiss(animated: true, completion: nil)
     }
 }
 

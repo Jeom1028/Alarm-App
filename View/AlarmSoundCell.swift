@@ -26,7 +26,7 @@ class AlarmSoundCell: UITableViewCell {
     
     private func setupCell() {
         contentView.addSubview(titleLabel)
-        contentView.backgroundColor = .olveDrab.withAlphaComponent(0.3)
+        contentView.backgroundColor = .olveDrab.withAlphaComponent(0.4)
         
         // Auto Layout 제약 조건
         titleLabel.snp.makeConstraints {
