@@ -28,7 +28,7 @@ class AlarmMainCell: UITableViewCell {
     private let switchControl: UISwitch = {
         let switchControl = UISwitch()
         switchControl.onTintColor = UIColor.olveDrab // 스위치가 켜졌을 때의 색상
-        switchControl.addTarget(AlarmMainCell.self, action: #selector(switchChanged(_:)), for: .valueChanged)
+        switchControl.addTarget(self, action: #selector(switchChanged(_:)), for: .valueChanged)
         return switchControl
     }()
     
