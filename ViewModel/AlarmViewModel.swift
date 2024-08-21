@@ -35,9 +35,6 @@ class AlarmViewModel {
     //MARK: - 새로운 알람 데이터를 Core Data에 저장하는 메서드 - YJ
     func addAlarm(hour: Int, minute: Int, ampm: String, sound: String, id: UUID) {
          let coreDataManager = CoreDataManager.shared
-         
-        // UUID 생성
-        let id = UUID()
         
         coreDataManager.create(
             entityName: Alarm.className,
@@ -51,7 +48,7 @@ class AlarmViewModel {
             ],
             ofType: Alarm.self
         )
-        
+        print("\(Alarm.Key.id)")
         // 업데이트된 데이터 가져오기
         fetchAlarms()
     }
@@ -73,33 +70,31 @@ class AlarmViewModel {
     }
     
     //MARK: - 알림을 예약하는 메서드 - YJ
-    func scheduleAlarmNotification(hour: Int, minute: Int, ampm: String, sound: String) {
-        print("\(hour), \(minute), \(ampm), \(sound)")
-        let content = UNMutableNotificationContent()
-        content.title = "알람"
-        content.body = "기상"
-        content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "\(sound).wav"))
-        
-        // 12시간 형식에서 24시간 형식으로 변환
-        let hour24 = convertTo24HourFormat(hour: hour, ampm: ampm)
-        
-        // 알림 트리거 설정
-        let dateComponents = DateComponents(hour: hour24, minute: minute, second: 0)
-        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-        
-        // 알림 요청 생성
-        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-        
-        // 알림 추가
-        UNUserNotificationCenter.current().add(request) { error in
-            if let error = error {
-                print("알림 요청 추가 에러: \(error.localizedDescription)")
+        func scheduleAlarmNotification(alarm: Alarm) {
+            guard let id = alarm.id?.uuidString else { return }
+            
+            let content = UNMutableNotificationContent()
+            content.title = "알람"
+            content.body = "기상"
+            content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "\(alarm.sound ?? "default").wav"))
+            
+            let hour24 = convertTo24HourFormat(hour: Int(alarm.hour), ampm: alarm.ampm ?? "")
+            
+            let dateComponents = DateComponents(hour: hour24, minute: Int(alarm.minute), second: 0)
+            let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+            
+            let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
+            
+            UNUserNotificationCenter.current().add(request) { error in
+                if let error = error {
+                    print("알림 요청 추가 에러: \(error.localizedDescription)")
+                }
             }
-        }
     }
     
     // MARK: - 알림을 취소하는 메서드 - YJ
     private func cancelAlarmNotification(identifier: String) {
+        print("Cancelling notification with identifier: \(identifier)")
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [identifier])
     }
     
@@ -108,12 +103,8 @@ class AlarmViewModel {
         guard let alarms = try? alarmsSubject.value(), let alarm = alarms.first(where: { $0.id == id }) else { return }
         
         if isOn {
-            scheduleAlarmNotification(
-                hour: Int(alarm.hour),
-                minute: Int(alarm.minute),
-                ampm: alarm.ampm ?? "",
-                sound: alarm.sound ?? ""
-            )
+            // 알람 객체를 직접 넘깁니다.
+            scheduleAlarmNotification(alarm: alarm)
         } else {
             cancelAlarmNotification(identifier: id.uuidString)
         }
