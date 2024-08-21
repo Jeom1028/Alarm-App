@@ -90,4 +90,24 @@ class WorldClockViewModel {
       print("Could not fetch. \(error), \(error.userInfo)")
     }
   }
+  func removeClock(at index: Int) {
+    let clock = selectedClocks[index]
+    selectedClocks.remove(at: index)
+    
+    guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+    let context = appDelegate.persistentContainer.viewContext
+    
+    let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "WorldClock")
+    fetchRequest.predicate = NSPredicate(format: "cityName == %@ AND timeZone == %@", clock.cityName, clock.timeZone)
+    
+    do {
+      let results = try context.fetch(fetchRequest)
+      for result in results {
+        context.delete(result)
+      }
+      try context.save()
+    } catch {
+      print("Could not delete. \(error)")
+    }
+  }
 }
