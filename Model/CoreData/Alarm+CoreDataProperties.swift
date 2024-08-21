@@ -21,6 +21,7 @@ extension Alarm {
     @NSManaged public var sound: String?
     @NSManaged public var hour: Int16
     @NSManaged public var ampm: String?
+    @NSManaged public var isActive: Bool
 
 }
 extension WorldClock {

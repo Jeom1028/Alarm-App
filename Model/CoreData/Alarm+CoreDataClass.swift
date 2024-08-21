@@ -18,6 +18,7 @@ public class Alarm: NSManagedObject {
         static let minute = "minute"
         static let ampm = "ampm"
         static let sound = "sound"
+        static let isActive = "isActive"
     }
 }
 

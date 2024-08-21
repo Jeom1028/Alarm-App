@@ -33,7 +33,7 @@ class AlarmViewModel {
     }
     
     //MARK: - 새로운 알람 데이터를 Core Data에 저장하는 메서드 - YJ
-    func addAlarm(hour: Int, minute: Int, ampm: String, sound: String) {
+    func addAlarm(hour: Int, minute: Int, ampm: String, sound: String, id: UUID) {
          let coreDataManager = CoreDataManager.shared
          
         // UUID 생성
@@ -46,7 +46,8 @@ class AlarmViewModel {
                 Alarm.Key.hour: hour,
                 Alarm.Key.minute: minute,
                 Alarm.Key.ampm: ampm,
-                Alarm.Key.sound: sound
+                Alarm.Key.sound: sound,
+                Alarm.Key.isActive: false // 기본값으로 비활성화 설정
             ],
             ofType: Alarm.self
         )
@@ -73,6 +74,7 @@ class AlarmViewModel {
     
     //MARK: - 알림을 예약하는 메서드 - YJ
     func scheduleAlarmNotification(hour: Int, minute: Int, ampm: String, sound: String) {
+        print("\(hour), \(minute), \(ampm), \(sound)")
         let content = UNMutableNotificationContent()
         content.title = "알람"
         content.body = "기상"
@@ -94,6 +96,30 @@ class AlarmViewModel {
                 print("알림 요청 추가 에러: \(error.localizedDescription)")
             }
         }
+    }
+    
+    // MARK: - 알림을 취소하는 메서드 - YJ
+    private func cancelAlarmNotification(identifier: String) {
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [identifier])
+    }
+    
+    // MARK: - 스위치 상태에 따라 알림 예약/취소 - YJ
+    func handleSwitchChanged(id: UUID, isOn: Bool) {
+        guard let alarms = try? alarmsSubject.value(), let alarm = alarms.first(where: { $0.id == id }) else { return }
+        
+        if isOn {
+            scheduleAlarmNotification(
+                hour: Int(alarm.hour),
+                minute: Int(alarm.minute),
+                ampm: alarm.ampm ?? "",
+                sound: alarm.sound ?? ""
+            )
+        } else {
+            cancelAlarmNotification(identifier: id.uuidString)
+        }
+        
+        // 알람의 활성화 상태 업데이트
+        updateAlarmActiveStatus(id: id, isActive: isOn)
     }
     
     //MARK: - 12시간 형식을 24시간 형식으로 변환하는 메서드 - YJ
@@ -128,4 +154,17 @@ class AlarmViewModel {
         currentAlarms.remove(at: index)
         alarmsSubject.onNext(currentAlarms)  // 데이터 소스 업데이트
     }
+    
+    // MARK: - 알람의 활성화 상태를 업데이트하는 메서드 - YJ
+     private func updateAlarmActiveStatus(id: UUID, isActive: Bool) {
+         let coreDataManager = CoreDataManager.shared
+         let predicate = NSPredicate(format: "\(Alarm.Key.id) == %@", id as CVarArg) // Core Data에서 해당 알람 엔티티 찾기
+         let values = [Alarm.Key.isActive: isActive]
+         coreDataManager.update(
+             entityName: Alarm.className,
+             predicate: predicate,
+             withValues: values,
+             ofType: Alarm.self
+         )
+     }
 }
